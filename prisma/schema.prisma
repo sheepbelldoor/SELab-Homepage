@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  category    String   @default("news") // "news" | "notice"
+  published   Boolean  @default(false)
+  pinned      Boolean  @default(false)
+  thumbnail   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  name        String
+  nameEn      String?
+  photo       String?
+  role        String   // "professor" | "postdoc" | "phd" | "ms" | "intern" | "alumni"
+  interest    String?
+  email       String?
+  homepage    String?
+  github      String?
+  scholar     String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Publication {
+  id          String   @id @default(cuid())
+  title       String
+  authors     String
+  venue       String
+  year        Int
+  featured    Boolean  @default(false)
+  pdfUrl      String?
+  doiUrl      String?
+  projectUrl  String?
+  codeUrl     String?
+  videoUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  participants String?
+  status      String   @default("ongoing") // "ongoing" | "completed"
+  featured    Boolean  @default(false)
+  imageUrl    String?
+  demoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Research {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteConfig {
+  id          String   @id @default("main")
+  labName     String   @default("SE Lab")
+  tagline     String   @default("Software Engineering Laboratory")
+  description String   @default("")
+  bannerUrl   String?
+  address     String   @default("")
+  building    String   @default("")
+  email       String   @default("")
+  phone       String   @default("")
+  mapUrl      String?
+  joinUsContent String @default("")
+  aboutContent  String @default("")
+  updatedAt   DateTime @updatedAt
+}
