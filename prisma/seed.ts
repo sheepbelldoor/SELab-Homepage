@@ -69,7 +69,6 @@ async function main() {
   });
 
   console.log("Seed data created successfully");
-  console.log(`Admin credentials: admin / ${adminPassword}`);
 }
 
 main()

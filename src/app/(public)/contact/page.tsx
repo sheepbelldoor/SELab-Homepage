@@ -1,10 +1,12 @@
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
+import { sanitizeMapUrl } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
   const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
+  const safeMapUrl = sanitizeMapUrl(config?.mapUrl);
 
   return (
     <>
@@ -54,9 +56,9 @@ export default async function ContactPage() {
             </div>
 
             <div className="p-6 bg-surface rounded-xl border border-gray-200 flex items-center justify-center min-h-[300px]">
-              {config?.mapUrl ? (
+              {safeMapUrl ? (
                 <iframe
-                  src={config.mapUrl}
+                  src={safeMapUrl}
                   width="100%"
                   height="300"
                   style={{ border: 0 }}

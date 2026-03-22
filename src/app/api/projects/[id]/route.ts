@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-check";
+import { sanitizeString, sanitizeBool, sanitizeUrl } from "@/lib/validate";
 
 export async function PUT(
   req: NextRequest,
@@ -11,16 +12,21 @@ export async function PUT(
 
   const { id } = await params;
   const body = await req.json();
+  const title = sanitizeString(body.title, 500);
+  if (!title) {
+    return NextResponse.json({ error: "Title is required" }, { status: 400 });
+  }
+
   const project = await prisma.project.update({
     where: { id },
     data: {
-      title: body.title,
-      description: body.description,
-      participants: body.participants,
-      status: body.status,
-      featured: body.featured,
-      imageUrl: body.imageUrl,
-      demoUrl: body.demoUrl,
+      title,
+      description: sanitizeString(body.description, 5000) || "",
+      participants: sanitizeString(body.participants, 1000),
+      status: body.status === "completed" ? "completed" : "ongoing",
+      featured: sanitizeBool(body.featured, false),
+      imageUrl: sanitizeUrl(body.imageUrl),
+      demoUrl: sanitizeUrl(body.demoUrl),
     },
   });
   return NextResponse.json(project);

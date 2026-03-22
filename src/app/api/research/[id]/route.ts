@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-check";
+import { sanitizeString, sanitizeInt } from "@/lib/validate";
 
 export async function PUT(
   req: NextRequest,
@@ -11,13 +12,18 @@ export async function PUT(
 
   const { id } = await params;
   const body = await req.json();
+  const title = sanitizeString(body.title, 200);
+  if (!title) {
+    return NextResponse.json({ error: "Title is required" }, { status: 400 });
+  }
+
   const area = await prisma.research.update({
     where: { id },
     data: {
-      title: body.title,
-      description: body.description,
-      icon: body.icon,
-      sortOrder: body.sortOrder,
+      title,
+      description: sanitizeString(body.description, 5000) || "",
+      icon: sanitizeString(body.icon, 100),
+      sortOrder: sanitizeInt(body.sortOrder, 0),
     },
   });
   return NextResponse.json(area);

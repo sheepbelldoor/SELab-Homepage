@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-check";
+import { sanitizeString, sanitizeInt, sanitizeBool, sanitizeUrl } from "@/lib/validate";
 
 export async function GET() {
   const pubs = await prisma.publication.findMany({
@@ -14,18 +15,23 @@ export async function POST(req: NextRequest) {
   if (denied) return denied;
 
   const body = await req.json();
+  const title = sanitizeString(body.title, 1000);
+  if (!title) {
+    return NextResponse.json({ error: "Title is required" }, { status: 400 });
+  }
+
   const pub = await prisma.publication.create({
     data: {
-      title: body.title,
-      authors: body.authors,
-      venue: body.venue,
-      year: body.year,
-      featured: body.featured ?? false,
-      pdfUrl: body.pdfUrl,
-      doiUrl: body.doiUrl,
-      projectUrl: body.projectUrl,
-      codeUrl: body.codeUrl,
-      videoUrl: body.videoUrl,
+      title,
+      authors: sanitizeString(body.authors, 2000) || "",
+      venue: sanitizeString(body.venue, 500) || "",
+      year: sanitizeInt(body.year, new Date().getFullYear()),
+      featured: sanitizeBool(body.featured, false),
+      pdfUrl: sanitizeUrl(body.pdfUrl),
+      doiUrl: sanitizeUrl(body.doiUrl),
+      projectUrl: sanitizeUrl(body.projectUrl),
+      codeUrl: sanitizeUrl(body.codeUrl),
+      videoUrl: sanitizeUrl(body.videoUrl),
     },
   });
   return NextResponse.json(pub, { status: 201 });

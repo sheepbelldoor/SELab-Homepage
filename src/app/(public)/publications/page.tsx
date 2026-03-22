@@ -1,4 +1,5 @@
 import PageHeader from "@/components/PageHeader";
+import SafeLink from "@/components/SafeLink";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -48,24 +49,24 @@ export default async function PublicationsPage() {
                     <p className="text-gray-500 text-sm italic">{pub.venue}</p>
                     <div className="flex gap-3 mt-2">
                       {pub.pdfUrl && (
-                        <a href={pub.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                        <SafeLink href={pub.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
                           PDF
-                        </a>
+                        </SafeLink>
                       )}
                       {pub.doiUrl && (
-                        <a href={pub.doiUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                        <SafeLink href={pub.doiUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
                           DOI
-                        </a>
+                        </SafeLink>
                       )}
                       {pub.codeUrl && (
-                        <a href={pub.codeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                        <SafeLink href={pub.codeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
                           Code
-                        </a>
+                        </SafeLink>
                       )}
                       {pub.videoUrl && (
-                        <a href={pub.videoUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                        <SafeLink href={pub.videoUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
                           Video
-                        </a>
+                        </SafeLink>
                       )}
                     </div>
                   </div>

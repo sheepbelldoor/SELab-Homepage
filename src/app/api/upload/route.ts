@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-check";
+import { ALLOWED_UPLOAD_TYPES, safeExtFromMime } from "@/lib/validate";
+import { randomUUID } from "crypto";
 import path from "path";
 import fs from "fs/promises";
 
@@ -14,8 +16,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
-  if (!allowedTypes.includes(file.type)) {
+  if (!ALLOWED_UPLOAD_TYPES.includes(file.type)) {
     return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
   }
 
@@ -24,8 +25,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
   }
 
-  const ext = path.extname(file.name) || ".jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
+  // Derive extension from MIME type, NOT from user-supplied filename
+  const ext = safeExtFromMime(file.type);
+  if (!ext) {
+    return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
+  }
+
+  const filename = `${randomUUID()}${ext}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads");
 
   await fs.mkdir(uploadDir, { recursive: true });

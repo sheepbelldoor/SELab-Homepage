@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-check";
+import { sanitizeString, sanitizeMapUrl, sanitizeUrl } from "@/lib/validate";
 
 export async function GET() {
   const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
@@ -15,28 +16,28 @@ export async function PUT(req: NextRequest) {
   const config = await prisma.siteConfig.upsert({
     where: { id: "main" },
     update: {
-      labName: body.labName,
-      tagline: body.tagline,
-      description: body.description,
-      bannerUrl: body.bannerUrl,
-      address: body.address,
-      building: body.building,
-      email: body.email,
-      phone: body.phone,
-      mapUrl: body.mapUrl,
-      joinUsContent: body.joinUsContent,
-      aboutContent: body.aboutContent,
+      labName: sanitizeString(body.labName, 200) || undefined,
+      tagline: sanitizeString(body.tagline, 500) ?? "",
+      description: sanitizeString(body.description, 2000) ?? "",
+      bannerUrl: sanitizeUrl(body.bannerUrl),
+      address: sanitizeString(body.address, 500) ?? "",
+      building: sanitizeString(body.building, 500) ?? "",
+      email: sanitizeString(body.email, 200) ?? "",
+      phone: sanitizeString(body.phone, 50) ?? "",
+      mapUrl: sanitizeMapUrl(body.mapUrl),
+      joinUsContent: sanitizeString(body.joinUsContent, 5000) ?? "",
+      aboutContent: sanitizeString(body.aboutContent, 5000) ?? "",
     },
     create: {
-      labName: body.labName || "SE Lab",
-      tagline: body.tagline || "",
-      description: body.description || "",
-      address: body.address || "",
-      building: body.building || "",
-      email: body.email || "",
-      phone: body.phone || "",
-      aboutContent: body.aboutContent || "",
-      joinUsContent: body.joinUsContent || "",
+      labName: sanitizeString(body.labName, 200) || "SE Lab",
+      tagline: sanitizeString(body.tagline, 500) || "",
+      description: sanitizeString(body.description, 2000) || "",
+      address: sanitizeString(body.address, 500) || "",
+      building: sanitizeString(body.building, 500) || "",
+      email: sanitizeString(body.email, 200) || "",
+      phone: sanitizeString(body.phone, 50) || "",
+      aboutContent: sanitizeString(body.aboutContent, 5000) || "",
+      joinUsContent: sanitizeString(body.joinUsContent, 5000) || "",
     },
   });
   return NextResponse.json(config);

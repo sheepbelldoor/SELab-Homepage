@@ -1,4 +1,5 @@
 import PageHeader from "@/components/PageHeader";
+import SafeLink from "@/components/SafeLink";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -28,14 +29,14 @@ export default async function ProjectsPage() {
         </p>
       )}
       {project.demoUrl && (
-        <a
+        <SafeLink
           href={project.demoUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-3 text-sm text-primary font-medium hover:underline"
         >
           View Demo &rarr;
-        </a>
+        </SafeLink>
       )}
     </div>
   );
