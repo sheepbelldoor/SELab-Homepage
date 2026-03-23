@@ -1,6 +1,8 @@
 import PageHeader from "@/components/PageHeader";
 import SafeLink from "@/components/SafeLink";
 import { prisma } from "@/lib/prisma";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +11,6 @@ export default async function PublicationsPage() {
     orderBy: [{ year: "desc" }, { createdAt: "desc" }],
   });
 
-  // Group by year
   const grouped = publications.reduce<Record<number, typeof publications>>(
     (acc, pub) => {
       (acc[pub.year] ||= []).push(pub);
@@ -27,26 +28,25 @@ export default async function PublicationsPage() {
       <PageHeader title="Publications" subtitle="논문 목록" />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {years.length === 0 ? (
-          <p className="text-center text-gray-500">등록된 논문이 없습니다.</p>
+          <p className="text-center text-muted-foreground">등록된 논문이 없습니다.</p>
         ) : (
           years.map((year) => (
             <div key={year} className="mb-12">
-              <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-gray-200">
-                {year}
-              </h2>
+              <h2 className="text-2xl font-bold mb-2">{year}</h2>
+              <Separator className="mb-6" />
               <div className="space-y-6">
                 {grouped[year].map((pub) => (
                   <div key={pub.id} className="group">
                     {pub.featured && (
-                      <span className="inline-block px-2 py-0.5 text-xs font-medium rounded bg-yellow-100 text-yellow-800 mb-1">
+                      <Badge variant="outline" className="mb-1 border-yellow-300 text-yellow-700 bg-yellow-50">
                         Featured
-                      </span>
+                      </Badge>
                     )}
                     <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
                       {pub.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mt-1">{pub.authors}</p>
-                    <p className="text-gray-500 text-sm italic">{pub.venue}</p>
+                    <p className="text-muted-foreground text-sm mt-1">{pub.authors}</p>
+                    <p className="text-muted-foreground/70 text-sm italic">{pub.venue}</p>
                     <div className="flex gap-3 mt-2">
                       {pub.pdfUrl && (
                         <SafeLink href={pub.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">

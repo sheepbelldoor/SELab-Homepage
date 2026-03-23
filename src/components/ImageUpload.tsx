@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface ImageUploadProps {
   value?: string | null;
@@ -53,35 +55,34 @@ export default function ImageUpload({
 
   return (
     <div className={className}>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
+      <Label>{label}</Label>
       {value && (
-        <div className="mb-3 relative inline-block">
+        <div className="mt-2 mb-3 relative inline-block">
           <img
             src={value}
             alt="Preview"
-            className="max-h-40 rounded-lg border border-gray-200 object-cover"
+            className="max-h-40 rounded-lg border object-cover"
           />
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-red-600"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-white rounded-full text-xs flex items-center justify-center hover:bg-destructive/80"
           >
             &times;
           </button>
         </div>
       )}
-      <div className="flex items-center gap-3">
-        <button
+      <div className="flex items-center gap-3 mt-2">
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
         >
           {uploading ? "업로드 중..." : value ? "변경" : "파일 선택"}
-        </button>
-        <span className="text-xs text-gray-400">JPG, PNG, GIF, WebP (최대 5MB)</span>
+        </Button>
+        <span className="text-xs text-muted-foreground">JPG, PNG, GIF, WebP (최대 5MB)</span>
       </div>
       <input
         ref={inputRef}
@@ -90,7 +91,7 @@ export default function ImageUpload({
         onChange={handleFileChange}
         className="hidden"
       />
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-destructive text-sm mt-1">{error}</p>}
     </div>
   );
 }

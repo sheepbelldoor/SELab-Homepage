@@ -2,6 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Member {
   id: string;
@@ -42,46 +55,50 @@ export default function AdminMembersPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">구성원 관리</h1>
-        <Link href="/admin/members/new" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+        <Link href="/admin/members/new" className={cn(buttonVariants())}>
           새 구성원
         </Link>
       </div>
 
       {loading ? (
-        <p className="text-gray-500">로딩 중...</p>
+        <p className="text-muted-foreground">로딩 중...</p>
       ) : members.length === 0 ? (
-        <p className="text-gray-500">구성원이 없습니다.</p>
+        <p className="text-muted-foreground">구성원이 없습니다.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">이름</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">소속</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">이메일</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">관리</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>이름</TableHead>
+                <TableHead>이메일</TableHead>
+                <TableHead className="w-16">관리</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {members.map((member) => (
-                <tr key={member.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium">
-                    {member.name}
-                    {member.nameEn && <span className="text-gray-400 ml-2 text-sm">({member.nameEn})</span>}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{roleLabels[member.role] || member.role}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{member.email || "-"}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <Link href={`/admin/members/${member.id}`} className="text-sm text-primary hover:underline">수정</Link>
-                      <button onClick={() => handleDelete(member.id)} className="text-sm text-red-500 hover:underline">삭제</button>
+                <TableRow key={member.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/admin/members/${member.id}`} className="font-medium hover:text-primary transition-colors">
+                        {member.name}
+                        {member.nameEn && <span className="text-muted-foreground ml-1 text-sm font-normal">({member.nameEn})</span>}
+                      </Link>
+                      <Badge variant="secondary" className="text-xs">
+                        {roleLabels[member.role] || member.role}
+                      </Badge>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{member.email || "-"}</TableCell>
+                  <TableCell>
+                    <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(member.id)}>
+                      삭제
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
     </div>
   );

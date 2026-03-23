@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { buttonVariants } from "@/lib/button-variants";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -44,13 +48,13 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/research"
-              className="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-blue-50 transition-colors"
+              className={cn(buttonVariants({ size: "lg", variant: "secondary" }))}
             >
               Research
             </Link>
             <Link
               href="/contact"
-              className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              className={cn(buttonVariants({ size: "lg" }), "border-2 border-white bg-transparent text-white hover:bg-white/10")}
             >
               Contact
             </Link>
@@ -60,29 +64,25 @@ export default async function HomePage() {
 
       {/* Research Areas */}
       {researchAreas.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">Research Areas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {researchAreas.map((area) => (
-                <div
-                  key={area.id}
-                  className="p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
-                >
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    {area.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {area.description}
-                  </p>
-                </div>
+                <Card key={area.id} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="pt-6">
+                    <h3 className="text-xl font-semibold text-primary mb-3">
+                      {area.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {area.description}
+                    </p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link
-                href="/research"
-                className="text-primary font-medium hover:underline"
-              >
+              <Link href="/research" className={cn(buttonVariants({ variant: "link" }))}>
                 View all research areas &rarr;
               </Link>
             </div>
@@ -92,33 +92,30 @@ export default async function HomePage() {
 
       {/* Latest News */}
       {latestNews.length > 0 && (
-        <section className="py-20 bg-surface">
+        <section className="py-20 bg-muted/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">Latest News</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {latestNews.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/news/${post.id}`}
-                  className="block bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow"
-                >
-                  <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-blue-100 text-primary mb-3">
-                    {post.category === "notice" ? "Notice" : "News"}
-                  </span>
-                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {post.createdAt.toLocaleDateString("ko-KR")}
-                  </p>
+                <Link key={post.id} href={`/news/${post.id}`}>
+                  <Card className="h-full hover:shadow-lg transition-shadow">
+                    <CardContent className="pt-6">
+                      <Badge variant="secondary" className="mb-3">
+                        {post.category === "notice" ? "Notice" : "News"}
+                      </Badge>
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {post.createdAt.toLocaleDateString("ko-KR")}
+                      </p>
+                    </CardContent>
+                  </Card>
                 </Link>
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link
-                href="/news"
-                className="text-primary font-medium hover:underline"
-              >
+              <Link href="/news" className={cn(buttonVariants({ variant: "link" }))}>
                 View all news &rarr;
               </Link>
             </div>
@@ -128,30 +125,26 @@ export default async function HomePage() {
 
       {/* Featured Publications */}
       {featuredPubs.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">
               Featured Publications
             </h2>
-            <div className="space-y-6">
+            <div className="space-y-4">
               {featuredPubs.map((pub) => (
-                <div
-                  key={pub.id}
-                  className="p-6 rounded-xl border border-gray-200"
-                >
-                  <h3 className="font-semibold text-lg mb-1">{pub.title}</h3>
-                  <p className="text-gray-600 text-sm mb-1">{pub.authors}</p>
-                  <p className="text-gray-500 text-sm">
-                    {pub.venue}, {pub.year}
-                  </p>
-                </div>
+                <Card key={pub.id}>
+                  <CardContent className="pt-6">
+                    <h3 className="font-semibold text-lg mb-1">{pub.title}</h3>
+                    <p className="text-muted-foreground text-sm mb-1">{pub.authors}</p>
+                    <p className="text-muted-foreground/70 text-sm">
+                      {pub.venue}, {pub.year}
+                    </p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link
-                href="/publications"
-                className="text-primary font-medium hover:underline"
-              >
+              <Link href="/publications" className={cn(buttonVariants({ variant: "link" }))}>
                 View all publications &rarr;
               </Link>
             </div>
@@ -166,10 +159,7 @@ export default async function HomePage() {
           <p className="text-blue-100 mb-8 max-w-xl mx-auto">
             We are always looking for motivated students and researchers to join our team.
           </p>
-          <Link
-            href="/contact"
-            className="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-blue-50 transition-colors"
-          >
+          <Link href="/contact" className={cn(buttonVariants({ size: "lg", variant: "secondary" }))}>
             Contact Us
           </Link>
         </div>

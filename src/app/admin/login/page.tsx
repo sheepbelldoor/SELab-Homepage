@@ -3,6 +3,10 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,46 +34,31 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-        <h1 className="text-2xl font-bold text-center mb-2">Admin Login</h1>
-        <p className="text-center text-gray-500 mb-8">SE Lab 관리자 로그인</p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              아이디
-            </label>
-            <input
-              name="username"
-              type="text"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              비밀번호
-            </label>
-            <input
-              name="password"
-              type="password"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-            />
-          </div>
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
-          >
-            {loading ? "로그인 중..." : "로그인"}
-          </button>
-        </form>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-muted/50">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Admin Login</CardTitle>
+          <CardDescription>SE Lab 관리자 로그인</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">아이디</Label>
+              <Input id="username" name="username" type="text" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">비밀번호</Label>
+              <Input id="password" name="password" type="password" required />
+            </div>
+            {error && (
+              <p className="text-destructive text-sm">{error}</p>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "로그인 중..." : "로그인"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

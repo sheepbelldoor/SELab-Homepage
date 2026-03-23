@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -29,46 +31,45 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {stats.map((stat) => (
-          <Link
-            key={stat.label}
-            href={stat.href}
-            className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-shadow"
-          >
-            <p className="text-sm text-gray-500">{stat.label}</p>
-            <p className="text-3xl font-bold mt-1">{stat.count}</p>
+          <Link key={stat.label} href={stat.href}>
+            <Card className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className="text-3xl font-bold mt-1">{stat.count}</p>
+              </CardContent>
+            </Card>
           </Link>
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold mb-4">최근 게시글</h2>
-        {recentPosts.length === 0 ? (
-          <p className="text-gray-500 text-sm">게시글이 없습니다.</p>
-        ) : (
-          <div className="space-y-3">
-            {recentPosts.map((post) => (
-              <div
-                key={post.id}
-                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-              >
-                <div>
-                  <p className="font-medium">{post.title}</p>
-                  <p className="text-sm text-gray-500">
-                    {post.published ? "공개" : "비공개"} &middot;{" "}
-                    {post.updatedAt.toLocaleDateString("ko-KR")}
-                  </p>
+      <Card>
+        <CardContent className="pt-6">
+          <h2 className="text-lg font-semibold mb-4">최근 게시글</h2>
+          {recentPosts.length === 0 ? (
+            <p className="text-muted-foreground text-sm">게시글이 없습니다.</p>
+          ) : (
+            <div className="space-y-1">
+              {recentPosts.map((post, i) => (
+                <div key={post.id}>
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium">{post.title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {post.published ? "공개" : "비공개"} &middot;{" "}
+                        {post.updatedAt.toLocaleDateString("ko-KR")}
+                      </p>
+                    </div>
+                    <Link href={`/admin/posts/${post.id}`} className="text-sm text-primary hover:underline">
+                      수정
+                    </Link>
+                  </div>
+                  {i < recentPosts.length - 1 && <Separator />}
                 </div>
-                <Link
-                  href={`/admin/posts/${post.id}`}
-                  className="text-sm text-primary hover:underline"
-                >
-                  수정
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -2,6 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
   publication?: Record<string, unknown>;
@@ -11,6 +16,7 @@ interface Props {
 export default function PublicationForm({ publication, isEdit }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [featured, setFeatured] = useState((publication?.featured as boolean) || false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,7 +34,7 @@ export default function PublicationForm({ publication, isEdit }: Props) {
         authors: form.get("authors"),
         venue: form.get("venue"),
         year: Number(form.get("year")),
-        featured: form.get("featured") === "on",
+        featured,
         pdfUrl: form.get("pdfUrl") || null,
         doiUrl: form.get("doiUrl") || null,
         codeUrl: form.get("codeUrl") || null,
@@ -45,57 +51,61 @@ export default function PublicationForm({ publication, isEdit }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">논문 제목</label>
-        <input name="title" defaultValue={(publication?.title as string) || ""} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">저자</label>
-        <input name="authors" defaultValue={(publication?.authors as string) || ""} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">게재처</label>
-          <input name="venue" defaultValue={(publication?.venue as string) || ""} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">연도</label>
-          <input name="year" type="number" defaultValue={(publication?.year as number) || new Date().getFullYear()} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">PDF URL</label>
-          <input name="pdfUrl" defaultValue={(publication?.pdfUrl as string) || ""} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">DOI URL</label>
-          <input name="doiUrl" defaultValue={(publication?.doiUrl as string) || ""} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Code URL</label>
-          <input name="codeUrl" defaultValue={(publication?.codeUrl as string) || ""} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
-          <input name="videoUrl" defaultValue={(publication?.videoUrl as string) || ""} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />
-        </div>
-      </div>
-      <label className="flex items-center gap-2">
-        <input type="checkbox" name="featured" defaultChecked={(publication?.featured as boolean) || false} className="rounded" />
-        <span className="text-sm">대표 논문</span>
-      </label>
-      <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50">
-          {saving ? "저장 중..." : "저장"}
-        </button>
-        <button type="button" onClick={() => router.back()} className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-          취소
-        </button>
-      </div>
-    </form>
+    <Card>
+      <CardContent className="pt-6">
+        <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="title">논문 제목</Label>
+            <Input id="title" name="title" defaultValue={(publication?.title as string) || ""} required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="authors">저자</Label>
+            <Input id="authors" name="authors" defaultValue={(publication?.authors as string) || ""} required />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="venue">게재처</Label>
+              <Input id="venue" name="venue" defaultValue={(publication?.venue as string) || ""} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="year">연도</Label>
+              <Input id="year" name="year" type="number" defaultValue={(publication?.year as number) || new Date().getFullYear()} required />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="pdfUrl">PDF URL</Label>
+              <Input id="pdfUrl" name="pdfUrl" defaultValue={(publication?.pdfUrl as string) || ""} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="doiUrl">DOI URL</Label>
+              <Input id="doiUrl" name="doiUrl" defaultValue={(publication?.doiUrl as string) || ""} />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="codeUrl">Code URL</Label>
+              <Input id="codeUrl" name="codeUrl" defaultValue={(publication?.codeUrl as string) || ""} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="videoUrl">Video URL</Label>
+              <Input id="videoUrl" name="videoUrl" defaultValue={(publication?.videoUrl as string) || ""} />
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Switch id="featured" checked={featured} onCheckedChange={setFeatured} />
+            <Label htmlFor="featured">대표 논문</Label>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button type="submit" disabled={saving}>
+              {saving ? "저장 중..." : "저장"}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => router.back()}>
+              취소
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

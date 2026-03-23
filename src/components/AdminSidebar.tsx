@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const menuItems = [
   { href: "/admin", label: "Dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" },
@@ -24,7 +26,7 @@ export default function AdminSidebar() {
         <p className="text-xs text-gray-400 mt-1">Admin Panel</p>
       </div>
 
-      <nav className="flex-1 py-4">
+      <nav className="flex-1 py-4 space-y-0.5">
         {menuItems.map((item) => {
           const isActive = item.href === "/admin"
             ? pathname === "/admin"
@@ -34,9 +36,9 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
+              className={`flex items-center gap-3 px-6 py-2.5 text-sm transition-colors ${
                 isActive
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white font-medium"
                   : "text-gray-300 hover:bg-gray-800 hover:text-white"
               }`}
             >
@@ -49,13 +51,18 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-800">
-        <button
+      <Separator className="bg-gray-800" />
+      <div className="p-4">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800"
           onClick={() => signOut({ callbackUrl: "/admin/login" })}
-          className="w-full px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
         >
+          <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
           로그아웃
-        </button>
+        </Button>
       </div>
     </aside>
   );

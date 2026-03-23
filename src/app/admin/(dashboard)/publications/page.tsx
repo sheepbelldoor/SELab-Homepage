@@ -2,6 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Publication {
   id: string;
@@ -33,48 +46,52 @@ export default function AdminPublicationsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">논문 관리</h1>
-        <Link href="/admin/publications/new" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+        <Link href="/admin/publications/new" className={cn(buttonVariants())}>
           새 논문
         </Link>
       </div>
 
       {loading ? (
-        <p className="text-gray-500">로딩 중...</p>
+        <p className="text-muted-foreground">로딩 중...</p>
       ) : pubs.length === 0 ? (
-        <p className="text-gray-500">논문이 없습니다.</p>
+        <p className="text-muted-foreground">논문이 없습니다.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">논문 제목</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">게재처</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">연도</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">관리</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>논문</TableHead>
+                <TableHead>연도</TableHead>
+                <TableHead className="w-16">관리</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {pubs.map((pub) => (
-                <tr key={pub.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      {pub.featured && <span className="text-xs bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded">대표</span>}
-                      <span className="font-medium">{pub.title}</span>
+                <TableRow key={pub.id}>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Link href={`/admin/publications/${pub.id}`} className="font-medium hover:text-primary transition-colors">
+                          {pub.title}
+                        </Link>
+                        {pub.featured && (
+                          <Badge variant="outline" className="border-yellow-300 text-yellow-700 bg-yellow-50 text-xs">대표</Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{pub.venue}</p>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{pub.venue}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{pub.year}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <Link href={`/admin/publications/${pub.id}`} className="text-sm text-primary hover:underline">수정</Link>
-                      <button onClick={() => handleDelete(pub.id)} className="text-sm text-red-500 hover:underline">삭제</button>
-                    </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground whitespace-nowrap">{pub.year}</TableCell>
+                  <TableCell>
+                    <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(pub.id)}>
+                      삭제
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
     </div>
   );

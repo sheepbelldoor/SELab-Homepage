@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
   return (
@@ -27,9 +28,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
+        <Separator className="my-8 bg-gray-800" />
+        <p className="text-center text-sm">
           &copy; {new Date().getFullYear()} SE Lab. All rights reserved.
-        </div>
+        </p>
       </div>
     </footer>
   );
