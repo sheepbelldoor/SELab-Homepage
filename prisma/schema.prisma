@@ -32,7 +32,7 @@ model Member {
   name        String
   nameEn      String?
   photo       String?
-  role        String   // "professor" | "postdoc" | "phd" | "ms" | "intern" | "alumni"
+  role        String   // "professor" | "postdoc" | "msphd" | "phd" | "ms" | "intern" | "alumni"
   bio         String?
   interest    String?
   email       String?

@@ -14,7 +14,6 @@ const links = [
   { href: "/people", label: "People" },
   { href: "/research", label: "Research" },
   { href: "/publications", label: "Publications" },
-  { href: "/projects", label: "Projects" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
 ];
@@ -28,7 +27,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="text-xl font-bold text-primary">
-            SELab
+            Software Engineering Laboratory
           </Link>
 
           {/* Desktop */}
@@ -56,7 +55,7 @@ export default function Navbar() {
               </svg>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px]">
-              <SheetTitle className="text-lg font-bold text-primary">SELab</SheetTitle>
+              <SheetTitle className="text-lg font-bold text-primary">Software Engineering Laboratory</SheetTitle>
               <Separator className="my-4" />
               <div className="flex flex-col gap-1">
                 {links.map((link) => (
