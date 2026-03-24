@@ -29,7 +29,7 @@ export async function PUT(req: NextRequest) {
       aboutContent: sanitizeString(body.aboutContent, 5000) ?? "",
     },
     create: {
-      labName: sanitizeString(body.labName, 200) || "SE Lab",
+      labName: sanitizeString(body.labName, 200) || "SELab",
       tagline: sanitizeString(body.tagline, 500) || "",
       description: sanitizeString(body.description, 2000) || "",
       address: sanitizeString(body.address, 500) || "",

@@ -59,29 +59,36 @@ export default function AdminProjectsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>프로젝트명</TableHead>
-                <TableHead className="w-16">관리</TableHead>
+                <TableHead className="w-20">상태</TableHead>
+                <TableHead className="w-16">대표</TableHead>
+                <TableHead className="w-24">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {projects.map((project) => (
                 <TableRow key={project.id}>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Link href={`/admin/projects/${project.id}`} className="font-medium hover:text-primary transition-colors">
-                        {project.title}
-                      </Link>
-                      <Badge variant={project.status === "ongoing" ? "default" : "secondary"} className="text-xs">
-                        {project.status === "ongoing" ? "진행중" : "완료"}
-                      </Badge>
-                      {project.featured && (
-                        <Badge variant="outline" className="border-yellow-300 text-yellow-700 bg-yellow-50 text-xs">대표</Badge>
-                      )}
-                    </div>
+                    <Link href={`/admin/projects/${project.id}`} className="font-medium hover:text-primary transition-colors">
+                      {project.title}
+                    </Link>
                   </TableCell>
                   <TableCell>
-                    <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(project.id)}>
-                      삭제
-                    </Button>
+                    <Badge variant={project.status === "ongoing" ? "default" : "secondary"} className="text-xs">
+                      {project.status === "ongoing" ? "진행중" : "완료"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {project.featured && (
+                      <Badge variant="outline" className="border-yellow-300 text-yellow-700 bg-yellow-50 text-xs">대표</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/admin/projects/${project.id}`} className="text-sm text-primary hover:underline">수정</Link>
+                      <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(project.id)}>
+                        삭제
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

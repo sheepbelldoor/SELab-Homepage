@@ -1,8 +1,6 @@
 import PageHeader from "@/components/PageHeader";
-import SafeLink from "@/components/SafeLink";
+import MemberCard from "@/components/MemberCard";
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
@@ -20,9 +18,29 @@ const roleLabels: Record<string, string> = {
 const roleOrder = ["professor", "postdoc", "msphd", "phd", "ms", "intern", "alumni"];
 
 export default async function PeoplePage() {
-  const members = await prisma.member.findMany({
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-  });
+  const [members, publications] = await Promise.all([
+    prisma.member.findMany({
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+    }),
+    prisma.publication.findMany({
+      orderBy: [{ year: "desc" }, { createdAt: "desc" }],
+      select: { id: true, title: true, authors: true, venue: true, year: true, url: true },
+    }),
+  ]);
+
+  // Match publications to members using authorAliases (greedy first-match)
+  function getPublicationsForMember(member: { name: string; nameEn: string | null; authorAliases: string }) {
+    let aliases: string[] = [];
+    try { aliases = JSON.parse(member.authorAliases); } catch { /* ignore */ }
+    // If no aliases configured, skip matching
+    if (aliases.length === 0) return [];
+    // Sort aliases by length descending for greedy first-match
+    const sortedAliases = [...aliases].sort((a, b) => b.length - a.length);
+    return publications.filter((pub) => {
+      const authorsLower = pub.authors.toLowerCase();
+      return sortedAliases.some((alias) => authorsLower.includes(alias.toLowerCase()));
+    });
+  }
 
   const grouped = roleOrder
     .map((role) => ({
@@ -44,60 +62,35 @@ export default async function PeoplePage() {
             <h2 className="text-2xl font-bold mb-2">{group.label}</h2>
             <Separator className="mb-8" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {group.members.map((member) => (
-                <Card key={member.id} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col items-center text-center">
-                      <Avatar className="w-24 h-24 mb-4">
-                        <AvatarImage src={member.photo || undefined} alt={member.name} />
-                        <AvatarFallback className="text-2xl bg-muted">
-                          {member.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <h3 className="font-semibold text-lg">{member.name}</h3>
-                      {member.nameEn && (
-                        <p className="text-sm text-muted-foreground">{member.nameEn}</p>
-                      )}
-                      {member.interest && (
-                        <p className="text-sm text-muted-foreground mt-2">
-                          {member.interest}
-                        </p>
-                      )}
-                      {member.email && (
-                        <div className="flex items-center justify-center gap-1.5 mt-2 text-muted-foreground">
-                          <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                          <span className="text-xs">{member.email}</span>
-                        </div>
-                      )}
-                      <div className="flex justify-center gap-3 mt-3">
-                        {member.homepage && (
-                          <SafeLink href={member.homepage} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" title="Homepage">
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                            </svg>
-                          </SafeLink>
-                        )}
-                        {member.github && (
-                          <SafeLink href={member.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" title="GitHub">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                            </svg>
-                          </SafeLink>
-                        )}
-                        {member.scholar && (
-                          <SafeLink href={member.scholar} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" title="Google Scholar">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 100 14 7 7 0 000-14z" />
-                            </svg>
-                          </SafeLink>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              {group.members.map((member) => {
+                const memberPubs = getPublicationsForMember(member);
+                return (
+                  <MemberCard
+                    key={member.id}
+                    member={{
+                      id: member.id,
+                      name: member.name,
+                      nameEn: member.nameEn,
+                      photo: member.photo,
+                      role: member.role,
+                      bio: member.bio,
+                      interest: member.interest,
+                      email: member.email,
+                      homepage: member.homepage,
+                      github: member.github,
+                      scholar: member.scholar,
+                      cvUrl: member.cvUrl,
+                      publications: memberPubs.map((p) => ({
+                        id: p.id,
+                        title: p.title,
+                        venue: p.venue,
+                        year: p.year,
+                        url: p.url,
+                      })),
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
         ))}

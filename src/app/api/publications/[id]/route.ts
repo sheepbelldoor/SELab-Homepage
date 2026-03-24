@@ -25,6 +25,7 @@ export async function PUT(
       venue: sanitizeString(body.venue, 500) || "",
       year: sanitizeInt(body.year, new Date().getFullYear()),
       featured: sanitizeBool(body.featured, false),
+      url: sanitizeUrl(body.url),
       pdfUrl: sanitizeUrl(body.pdfUrl),
       doiUrl: sanitizeUrl(body.doiUrl),
       projectUrl: sanitizeUrl(body.projectUrl),

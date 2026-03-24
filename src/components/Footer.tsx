@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-white text-lg font-bold mb-3">SE Lab</h3>
+            <h3 className="text-white text-lg font-bold mb-3">SELab</h3>
             <p className="text-sm leading-relaxed">
               Software Engineering Laboratory
             </p>
@@ -30,7 +30,7 @@ export default function Footer() {
         </div>
         <Separator className="my-8 bg-gray-800" />
         <p className="text-center text-sm">
-          &copy; {new Date().getFullYear()} SE Lab. All rights reserved.
+          &copy; {new Date().getFullYear()} SELab. All rights reserved.
         </p>
       </div>
     </footer>

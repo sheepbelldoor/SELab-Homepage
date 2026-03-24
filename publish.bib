@@ -1,0 +1,654 @@
+@article{MO2025112564,
+title = {RCFuzzer: Recommendation-based Collaborative Fuzzer},
+journal = {Journal of Systems and Software},
+volume = {230},
+pages = {112564},
+year = {2025},
+issn = {0164-1212},
+doi = {https://doi.org/10.1016/j.jss.2025.112564},
+url = {https://www.sciencedirect.com/science/article/pii/S016412122500233X},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/1882291.1882330},
+code = {https://github.com/hyeonminmo/RCFuzzer},
+author = {Hyeonmin Mo and Jongmun Yang and Yunho Kim},
+keywords = {Collaborative fuzzing, Crash detection, Thompson sampling},
+abstract = {Fuzzing is an effective technique for detecting bugs by executing programs with randomly generated or mutated inputs. However, as various fuzzers have been developed, selecting the most suitable fuzzer for a specific program has become increasingly difficult. To address this issue, collaborative fuzzing techniques have been proposed, which combine multiple fuzzers and select the optimal one. However, existing approaches are inefficient and have limited accuracy, as they require significant time to evaluate fuzzer performance and fail to effectively utilize the latest results from the fuzzing campaign. To overcome these challenges, we propose RCFuzzer, a ReCommendation based collaborative Fuzzer. RCFuzzer treats the fuzzer selection problem as a Multi-Armed Bandit(MAB) problem and improves the efficiency and accuracy of selecting the optimal fuzzer using Thompson sampling. First, RCFuzzer is efficient because it directly utilizes the current fuzzing results, eliminating the need for additional time to evaluate individual fuzzers. Second, RCFuzzer can accurately select the optimal fuzzer by using the fuzzing results obtained from the current state of the fuzzing target as feedback. Additionally, to further improve the accuracy of fuzzer selection, RCFuzzer adopts the branch difficulty heuristics, which assigns different weights to branches based on their difficulty to cover and evaluates fuzzers accordingly. The empirical evaluation on the 47 programs from MAGMA, UNIFUZZ and Google’s Fuzzer-Test-Suite shows that RCFuzzer outperforms individual fuzzers in code coverage and crash detection capability. Additionally, RCFuzzer achieves higher code coverage for 29 out of 47 programs and detects 18 more unique crashes than autofz, the state-of-the-art collaborative fuzzer.}
+}
+
+@INPROCEEDINGS{11023506,
+author={Park, Junyoung and Kim, Yunho and Yun, Insu},
+booktitle={2025 IEEE Symposium on Security and Privacy (SP)}, 
+title={RGFuzz: Rule-Guided Fuzzer for WebAssembly Runtimes}, 
+year={2025},
+volume={},
+number={},
+code={https://github.com/kaist-hacking/RGFuzz},
+pages={920-938},
+keywords={Privacy;Runtime;Codes;Computer bugs;Prototypes;Fuzzing;Complexity theory;Security;Engines;Testing},
+doi={10.1109/SP61157.2025.00003},
+url = {https://ieeexplore.ieee.org/abstract/document/11023506},
+pdf = {https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11023506}
+}
+
+@article{10.1145/3697014,
+author = {Lee, Ahcheong and Choi, Youngseok and Hong, Shin and Kim, Yunho and Cho, Kyutae and Kim, Moonzoo},
+title = {ZigZagFuzz: Interleaved Fuzzing of Program Options and Files},
+year = {2025},
+issue_date = {February 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {34},
+number = {2},
+issn = {1049-331X},
+code = {https://github.com/swtv-kaist/ZigZagFuzz},
+url = {https://doi.org/10.1145/3697014},
+doi = {10.1145/3697014},
+abstract = {Command-line options (e.g., -l, -F, -R for ls) given to a command-line program can significantly alternate the behaviors of the program. Thus, fuzzing not only file input but also program options can improve test coverage and bug detection. In this article, we propose ZigZagFuzz which achieves higher test coverage and detects more bugs than the state-of-the-art fuzzers by separately mutating program options and file inputs in an iterative/interleaving manner. ZigZagFuzz applies the following three core ideas. First, to utilize different characteristics of the program option domain and the file input domain, ZigZagFuzz separates phases of mutating program options from ones of mutating file inputs and performs two distinct mutation strategies on the two different domains. Second, to reach deep segments of a target program that are accessed through an interleaving sequence of program option checks and file inputs checks, ZigZagFuzz continuously interleaves phases of mutating program options with phases of mutating file inputs. Finally, to improve fuzzing performance further, ZigZagFuzz periodically shrinks input corpus by removing similar test inputs based on their function coverage. The experiment results on the 20 real-world programs show that ZigZagFuzz improves test coverage and detects 1.9 to 10.6 times more bugs than the state-of-the-art fuzzers that mutate program options such as AFL++-argv, AFL++-all, Eclipser, CarpetFuzz, ConfigFuzz, and POWER. We have reported the new bugs detected by ZigZagFuzz, and the original developers confirmed our bug reports.},
+pdf={https://dl.acm.org/doi/pdf/10.1145/3697014},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = jan,
+articleno = {39},
+numpages = {31},
+keywords = {Automated test generation, fuzzing, command-line program options, bug detection, dynamic analysis}
+}
+
+@article{https://doi.org/10.1002/stvr.1786,
+author = {Kim, Yunho and Hong, Shin},
+title = {Learning-based mutant reduction using fine-grained mutation operators},
+journal = {Software Testing, Verification and Reliability},
+volume = {32},
+number = {7},
+pages = {e1786},
+keywords = {cost-considerate linear regression, mutant reduction, mutation analysis, mutation operator, mutation score prediction},
+doi = {https://doi.org/10.1002/stvr.1786},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/stvr.1786},
+pdf = {https://onlinelibrary.wiley.com/doi/epdf/10.1002/stvr.1786},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/stvr.1786},
+abstract = {Summary For mutation testing, the huge cost of running test suites on a large number of mutants has been a serious obstacle. To resolve this problem, we propose a learning-based mutant reduction technique MuTrain. MuTrain uses cost-considerate linear regression (i.e., CLARS) to learn a mutation model, which predicts the mutation score of a test suite based on the mutation testing results of a previous version of a target program. Then, MuTrain applies the mutation model for subsequent versions to predict mutation scores with significantly fewer mutants. For effective mutant reduction and accurate mutation score prediction, MuTrain uses fine-grained mutation operators refined from the existing coarse-grained mutation operators. The experiment results show that MuTrain reduces the number of mutants effectively (i.e., selecting only 1.6\% of mutants). Moreover, MuTrain predicts mutation score far more accurately than the existing mutant reduction techniques and random mutant selection. We also found that MuTrain achieves much greater mutant reduction when it uses the fine-grained mutation operators than the traditional coarse-grained mutation operators (i.e., 1.6\% vs. 14.6\%).},
+year = {2022}
+}
+
+@INPROCEEDINGS {9787914,
+author = { Herlim, Robert Sebastian and Kim, Yunho and Kim, Moonzoo },
+booktitle = { 2022 IEEE Conference on Software Testing, Verification and Validation (ICST) },
+title = {{ CITRUS: Automated Unit Testing Tool for Real-world C++ Programs }},
+year = {2022},
+volume = {},
+ISSN = {2159-4848},
+pages = {400-410},
+abstract = { C++ is popular in many application domains for its extensibility, flexibility, and high performance. At the same time, however, C++ is infamous for its complex syntax and semantics. Thus, it is challenging to write correct C++ programs and the need to automatically test C++ programs has been high. Unfortunately, due to the high complexity of C++ (e.g., template instantiation, complex STL types, etc.), there are almost no automated unit testing tool publicly available for real-world C++ programs. We have developed a new automated unit testing tool CITRUS that resolves the aforementioned complexity of C++ programs. After analyzing the source code of a target C++ program P, CITRUS automatically generates test driver files for P, each of which consists of various method calls of P. Then, to improve the test coverage of P, it generates more diverse test drivers by mutating the test driver code. Also, CITRUS increases the test coverage of $P$ further by applying libfuzzer to alternate P's state by mutating arguments of the methods. We have demonstrated the testing effectiveness and the efficiency of CITRUS through the experiments on the real-world C++ programs, on which CITRUS achieves up to 95% statement and 79% branch coverage. },
+keywords = {Software testing;Codes;Conferences;Semantics;C++ languages;Syntactics;Complexity theory},
+doi = {10.1109/ICST53961.2022.00046},
+url = {https://doi.ieeecomputersociety.org/10.1109/ICST53961.2022.00046},
+pdf = {https://swtv.kaist.ac.kr/files/publications/international_conference/icst22-citrus.pdf},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month =apr
+}
+
+@INPROCEEDINGS {9787839,
+author = { Lee, Ahcheong and Ariq, Irfan and Kim, Yunho and Kim, Moonzoo },
+booktitle = { 2022 IEEE Conference on Software Testing, Verification and Validation (ICST) },
+title = {{ POWER: Program Option-Aware Fuzzer for High Bug Detection Ability }},
+year = {2022},
+volume = {},
+ISSN = {2159-4848},
+pages = {220-231},
+abstract = { Most programs with command-line interface (CLI) have dozens of command-line options (e.g., -l, -F, -R for ls) to alternate the operation of the programs. Thus, depending on the option configurations (i.e., a list of options like -l -F and -F -R) applied during fuzzing, the test coverage and crash detection results can vary significantly. In this paper, we propose a novel fuzzing technique POWER that detects more crashes than the cutting-edge fuzzers by actively constructing and carefully selecting various program option configurations. The salient idea of POWER is to enforce diverse executions of a target program by selecting a set of the option configurations each of which is far “different/distant” from the others in the set. Another core idea of POWER is to apply different fuzzing strategies to different input domains (i.e., option configurations and input files) to increase testing effectiveness within limited time budget. The experiment results on the 30 real-world programs show that POWER detects significantly more crash bugs than the state-of-the-art fuzzing techniques. },
+keywords = {Conferences;Computer bugs;Fuzzing},
+doi = {10.1109/ICST53961.2022.00032},
+url = {https://doi.ieeecomputersociety.org/10.1109/ICST53961.2022.00032},
+pdf = {https://swtv.kaist.ac.kr/files/publications/international_conference/POWER-IEEEeXpress-2022017668.pdf},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month =apr}
+
+@ARTICLE{9627119,
+  author={Lee, Nakwon and Kim, Yunho and Kim, Moonzoo and Ryu, Duksan and Baik, Jongmoon},
+  journal={IEEE Access}, 
+  title={Directed Model Checking for Fast Abstract Reachability Analysis}, 
+  year={2021},
+  volume={9},
+  number={},
+  pages={158738-158750},
+  keywords={Measurement;Runtime;Model checking;Computer bugs;Annotations;Software;Reachability analysis;Software verification;software testing;symbolic model checking;abstract reachability;interprocedural analysis;directed search},
+  doi={10.1109/ACCESS.2021.3130569},
+  url={https://ieeexplore.ieee.org/abstract/document/9627119},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9627119}
+}
+
+@InProceedings{10.1007/978-3-030-88106-1_9,
+author="Herlim, Robert Sebastian
+and Hong, Shin
+and Kim, Yunho
+and Kim, Moonzoo",
+editor="O'Reilly, Una-May
+and Devroey, Xavier",
+title="Empirical Study of Effectiveness of EvoSuite on the SBST 2020 Tool Competition Benchmark",
+booktitle="Search-Based Software Engineering",
+year="2021",
+publisher="Springer International Publishing",
+address="Cham",
+pages="121--135",
+abstract="EvoSuite is a state-of-the-art search-based software testing tool for Java programs and many researchers have applied EvoSuite to achieve high test coverage. However, due to high complexity of object-oriented programs, EvoSuite still suffers several limitations in terms of test coverage achievement. In this paper, to improve the effectiveness of EvoSuite by analyzing EvoSuite's limitations, we conducted an empirical study to identify the limitations of EvoSuite on the most recent SBST 2020 Tool Competition benchmark that consists of 70 classes selected from real-world Java projects. We have manually classified the branches of the target programs that EvoSuite could not cover and reported corresponding limitations of EvoSuite with concrete examples.",
+isbn="978-3-030-88106-1",
+doi = {https://doi.org/10.1007/978-3-030-88106-1_9},
+url = {https://link.springer.com/chapter/10.1007/978-3-030-88106-1_9},
+pdf = {https://hongshin.github.io/pubs/ssbse21-evosuite.pdf}
+}
+
+@article{https://doi.org/10.1002/stvr.1715,
+author = {Kim, Yunho and Hong, Shin},
+title = {DEMINER: test generation for high test coverage through mutant exploration},
+journal = {Software Testing, Verification and Reliability},
+volume = {31},
+number = {1-2},
+pages = {e1715},
+keywords = {automated test generation, concolic testing, fuzzing, mutation analysis, test coverage},
+doi = {https://doi.org/10.1002/stvr.1715},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/stvr.1715},
+pdf = {https://onlinelibrary.wiley.com/doi/epdf/10.1002/stvr.1715},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/stvr.1715},
+note = {e1715 stvr.1715},
+abstract = {Summary Most software testing techniques test a target program as it is and fail to utilize valuable information of diverse test executions on many variants/mutants of the original program in test generation. This paper proposes a new test generation technique DEMINER, which utilizes mutant executions to guide test generation on the original program for high test coverage. DEMINER first generates various mutants of an original target program and then extracts runtime information of mutant executions, which covered unreached branches by the mutation effects. Using the obtained runtime information, DEMINER inserts guideposts, artificial branches to replay the observed mutation effects, to the original target programs. Finally, DEMINER runs automated test generation on the original program with guideposts and achieves higher test coverage. We implemented DEMINER for C programs through software mutation and guided test generation such as concolic testing and fuzzing. We have shown the effectiveness of DEMINER on six real-world target programs: Busybox-ls, Busybox-printf, Coreutils-sort, GNU-find, GNU-grep and GNU-sed. The experiment results show that DEMINER improved branch coverage by 63.4\% and 19.6\% compared with those of the conventional concolic testing techniques and the conventional fuzzing techniques on average, respectively.},
+year = {2021}
+}
+
+@article{KIM2020106221,
+title = {MAESTRO: Automated test generation framework for high test coverage and reduced human effort in automotive industry},
+journal = {Information and Software Technology},
+volume = {123},
+pages = {106221},
+year = {2020},
+issn = {0950-5849},
+doi = {https://doi.org/10.1016/j.infsof.2019.106221},
+url = {https://www.sciencedirect.com/science/article/pii/S0950584919302332},
+pdf = {https://www.sciencedirect.com/science/article/pii/S0950584919302332/pdfft?md5=5950a0715e7491fabd5d369093d3e650&pid=1-s2.0-S0950584919302332-main.pdf},
+author = {Yunho Kim and Dongju Lee and Junki Baek and Moonzoo Kim},
+keywords = {Automated test generation, Concolic testing, Fuzzing, Automotive software, Coverage testing},
+abstract = {Context
+The importance of automotive software has been rapidly increasing because software controls many components of motor vehicles such as smart-key system, tire pressure monitoring system, and advanced driver assistance system. Consequently, the automotive industry spends a large amount of human effort to test automotive software and is interested in automated testing techniques to ensure high-quality automotive software with reduced human effort.
+Objective
+Applying automated test generation techniques to automotive software is technically challenging because of false alarms caused by imprecise test drivers/stubs and lack of tool supports for symbolic analysis of bit-fields and function pointers in C. To address such challenges, we have developed an automated testing framework MAESTRO.
+Method
+MAESTRO automatically builds a test driver and stubs for a target task (i.e., a software unit consisting of target functions). Then, it generates test inputs to a target task with the test driver and stubs by applying concolic testing and fuzzing together in an adaptive way. In addition, MAESTRO transforms a target program that uses bit-fields into a semantically equivalent one that does not use bit-fields. Also, MAESTRO supports symbolic function pointers by identifying the candidate functions of a symbolic function pointer through static analysis.
+Results
+MAESTRO achieved 94.2% branch coverage and 82.3% MC/DC coverage on the four target modules (238 KLOC) developed by Hyundai Mobis. Furthermore, it significantly reduced the cost of coverage testing by reducing the manual effort for coverage testing by 58.8%.
+Conclusion
+By applying automated testing techniques, MAESTRO can achieve high test coverage for automotive software with significantly reduced manual testing effort.}
+}
+
+@article{10.1145/3345628,
+author = {Kim, Yunho and Mun, Seokhyeon and Yoo, Shin and Kim, Moonzoo},
+title = {Precise Learn-to-Rank Fault Localization Using Dynamic and Static Features of Target Programs},
+year = {2019},
+issue_date = {October 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {28},
+number = {4},
+issn = {1049-331X},
+url = {https://doi.org/10.1145/3345628},
+doi = {10.1145/3345628},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/3345628},
+abstract = {Finding the root cause of a bug requires a significant effort from developers. Automated fault localization techniques seek to reduce this cost by computing the suspiciousness scores (i.e., the likelihood of program entities being faulty). Existing techniques have been developed by utilizing input features of specific types for the computation of suspiciousness scores, such as program spectrum or mutation analysis results. This article presents a novel learn-to-rank fault localization technique called PRecise machINe-learning-based fault loCalization tEchnique (PRINCE). PRINCE uses genetic programming (GP) to combine multiple sets of localization input features that have been studied separately until now. For dynamic features, PRINCE encompasses both Spectrum Based Fault Localization (SBFL) and Mutation Based Fault Localization (MBFL) techniques. It also uses static features, such as dependency information and structural complexity of program entities. All such information is used by GP to train a ranking model for fault localization. The empirical evaluation on 65 real-world faults from CoREBench, 84 artificial faults from SIR, and 310 real-world faults from Defects4J shows that PRINCE outperforms the state-of-the-art SBFL, MBFL, and learn-to-rank techniques significantly. PRINCE localizes a fault after reviewing 2.4\% of the executed statements on average (4.2 and 3.0 times more precise than the best of the compared SBFL and MBFL techniques, respectively). Also, PRINCE ranks 52.9\% of the target faults within the top ten suspicious statements.},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = oct,
+articleno = {23},
+numpages = {34},
+keywords = {Fault localization, machine learning, mutation analysis, source file characteristics}
+}
+
+@INPROCEEDINGS{8804440,
+  author={Kim, Yunho and Lee, Dongju and Baek, Junki and Kim, Moonzoo},
+  booktitle={2019 IEEE/ACM 41st International Conference on Software Engineering: Software Engineering in Practice (ICSE-SEIP)}, 
+  title={Concolic Testing for High Test Coverage and Reduced Human Effort in Automotive Industry}, 
+  year={2019},
+  volume={},
+  number={},
+  pages={151-160},
+  keywords={Testing;Software;Automotive engineering;Task analysis;Tools;Industries;Input variables;automated test generation;concolic testing;automotive software;coverage testing},
+  doi={10.1109/ICSE-SEIP.2019.00024},
+  url={https://ieeexplore.ieee.org/abstract/document/8804440},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8804440}
+}
+
+@inproceedings{10.1145/3338906.3338934,
+author = {Kim, Yunho and Hong, Shin and Kim, Moonzoo},
+title = {Target-driven compositional concolic testing with function summary refinement for effective bug detection},
+year = {2019},
+isbn = {9781450355728},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3338906.3338934},
+doi = {10.1145/3338906.3338934},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/3338906.3338934},
+abstract = {Concolic testing is popular in unit testing because it can detect bugs quickly in a relatively small search space. But, in system-level testing, it suffers from the symbolic path explosion and often misses bugs. To resolve this problem, we have developed a focused compositional concolic testing technique, FOCAL, for effective bug detection. Focusing on a target unit failure v (a crash or an assert violation) detected by concolic unit testing, FOCAL generates a system-level test input that validates v. This test input is obtained by building and solving symbolic path formulas that represent system-level executions raising v. FOCAL builds such formulas by combining function summaries one by one backward from a function that raised v to main. If a function summary φa of function a conflicts with the summaries of the other functions, FOCAL refines φa to φa′ by applying a refining constraint learned from the conflict. FOCAL showed high system-level bug detection ability by detecting 71 out of the 100 real-world target bugs in the SIR benchmark, while other relevant cutting edge techniques (i.e., AFL-fast, KATCH, Mix-CCBSE) detected at most 40 bugs. Also, FOCAL detected 13 new crash bugs in popular file parsing programs.},
+booktitle = {Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+pages = {16-26},
+numpages = {11},
+keywords = {Automated test generation, craig interpolant, dynamic symbolic execution, function summary refinement, target-driven compositional concolic testing},
+location = {Tallinn, Estonia},
+series = {ESEC/FSE 2019}
+}
+
+@inproceedings{10.1145/3180155.3180253,
+author = {Kim, Yunho and Choi, Yunja and Kim, Moonzoo},
+title = {Precise concolic unit testing of C programs using extended units and symbolic alarm filtering},
+year = {2018},
+isbn = {9781450356381},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3180155.3180253},
+doi = {10.1145/3180155.3180253},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/3180155.3180253},
+abstract = {Automated unit testing reduces manual effort to write unit test drivers/stubs and generate unit test inputs. However, automatically generated unit test drivers/stubs raise false alarms because they often over-approximate real contexts of a target function f and allow infeasible executions of f. To solve this problem, we have developed a concolic unit testing technique CONBRIO. To provide realistic context to f, it constructs an extended unit of f that consists of f and closely relevant functions to f. Also, CONBRIO filters out a false alarm by checking feasibility of a corresponding symbolic execution path with regard to f's symbolic calling contexts obtained by combining symbolic execution paths of f's closely related predecessor functions.In the experiments on the crash bugs of 15 real-world C programs, CONBRIO shows both high bug detection ability (i.e. 91.0\% of the target bugs detected) and high precision (i.e. a true to false alarm ratio is 1:4.5). Also, CONBRIO detects 14 new bugs in 9 target C programs studied in papers on crash bug detection techniques.},
+booktitle = {Proceedings of the 40th International Conference on Software Engineering},
+pages = {315-326},
+numpages = {12},
+location = {Gothenburg, Sweden},
+series = {ICSE '18}
+}
+
+@INPROCEEDINGS{8411729,
+  author={Phan, Duy Loc and Kim, Yunho and Kim, Moonzoo},
+  booktitle={2018 IEEE International Conference on Software Testing, Verification and Validation Workshops (ICSTW)}, 
+  title={MUSIC: Mutation Analysis Tool with High Configurability and Extensibility}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={40-46},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8411729},
+  url={https://ieeexplore.ieee.org/abstract/document/8411729},
+  keywords={Multiple signal classification;Tools;Benchmark testing;Databases;Software;Switches;Protocols;Mutation analysis;Practical mutation tool;C programs},
+  doi={10.1109/ICSTW.2018.00026}}
+
+@INPROCEEDINGS{8367052,
+  author={Kim, Yunho and Hong, Shin and Ko, Bongseok and Phan, Duy Loc and Kim, Moonzoo},
+  booktitle={2018 IEEE 11th International Conference on Software Testing, Verification and Validation (ICST)}, 
+  title={Invasive Software Testing: Mutating Target Programs to Diversify Test Exploration for High Test Coverage}, 
+  year={2018},
+  volume={},
+  number={},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8367052},
+  url={https://ieeexplore.ieee.org/abstract/document/8367052},
+  pages={239-249},
+  keywords={Test pattern generators;Manganese;Software testing;Invasive software;Computer crashes;Mutation analysis;Practical mutation tool;C programs},
+  doi={10.1109/ICST.2018.00032}}
+
+% Automated Unit-test Generation for Detecting Vulnerabilities of Android Kernel Modules 이거 추가해야 함
+
+@article{HONG201780,
+title = {MUSEUM: Debugging real-world multilingual programs using mutation analysis},
+journal = {Information and Software Technology},
+volume = {82},
+pages = {80-95},
+year = {2017},
+issn = {0950-5849},
+doi = {https://doi.org/10.1016/j.infsof.2016.10.002},
+url = {https://www.sciencedirect.com/science/article/pii/S0950584916302427},
+pdf = {https://www.sciencedirect.com/science/article/pii/S0950584916302427/pdfft?md5=564cc8660b37b039fd413ed8b4b201dc&pid=1-s2.0-S0950584916302427-main.pdf},
+author = {Shin Hong and Taehoon Kwak and Byeongcheol Lee and Yiru Jeon and Bongseok Ko and Yunho Kim and Moonzoo Kim},
+keywords = {Debugging, mutation analysis, Language interoperability, Foreign function interface},
+abstract = {Context: The programming language ecosystem has diversified over the last few decades. Non-trivial programs are likely to be written in more than a single language to take advantage of various control/data abstractions and legacy libraries. Objective: Debugging multilingual bugs is challenging because language interfaces are difficult to use correctly and the scope of fault localization goes beyond language boundaries. To locate the causes of real-world multilingual bugs, this article proposes a mutation-based fault localization technique (MUSEUM). Method: MUSEUM modifies a buggy program systematically with our new mutation operators as well as conventional mutation operators, observes the dynamic behavioral changes in a test suite, and reports suspicious statements. To reduce the analysis cost, MUSEUM selects a subset of mutated programs and test cases. Results: Our empirical evaluation shows that MUSEUM is (i) effective: it identifies the buggy statements as the most suspicious statements for both resolved and unresolved non-trivial bugs in real-world multilingual programming projects; and (ii) efficient: it locates the buggy statements in modest amount of time using multiple machines in parallel. Also, by applying selective mutation analysis (i.e., selecting subsets of mutants and test cases to use), MUSEUM achieves significant speedup with marginal accuracy loss compared to the full mutation analysis. Conclusion: It is concluded that MUSEUM locates real-world multilingual bugs accurately. This result shows that mutation analysis can provide an effective, efficient, and language semantics agnostic analysis on multilingual code. Our light-weight analysis approach would play important roles as programmers write and debug large and complex programs in diverse programming languages.}
+}
+
+% Mutagen4J : Effective Mutant Generation Tool for Java Programs
+
+% Effective Integer Promotion Bug Detection Technique for Embedded Software
+
+@INPROCEEDINGS{7372034,
+  author={Hong, Shin and Lee, Byeongcheol and Kwak, Taehoon and Jeon, Yiru and Ko, Bongsuk and Kim, Yunho and Kim, Moonzoo},
+  booktitle={2015 30th IEEE/ACM International Conference on Automated Software Engineering (ASE)}, 
+  title={Mutation-Based Fault Localization for Real-World Multilingual Programs (T)}, 
+  year={2015},
+  volume={},
+  number={},
+  pages={464-475},
+  keywords={Computer bugs;Debugging;Java;Safety;Testing;Libraries;Programming;Multilingual Programs;Debugging;Fault Localization;Mutation Analysis;Mutation Based Fault Localization},
+  doi={10.1109/ASE.2015.14},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7372034},
+  url={https://ieeexplore.ieee.org/abstract/document/7372034}
+  }
+
+@article{https://doi.org/10.1002/stvr.1562,
+author = {Xu, Zhihong and Kim, Yunho and Kim, Moonzoo and Cohen, Myra B. and Rothermel, Gregg},
+title = {Directed test suite augmentation: an empirical investigation},
+journal = {Software Testing, Verification and Reliability},
+volume = {25},
+number = {2},
+pages = {77-114},
+keywords = {regression testing, test case augmentation, concolic testing, genetic algorithms},
+doi = {https://doi.org/10.1002/stvr.1562},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/stvr.1562},
+pdf = {https://onlinelibrary.wiley.com/doi/epdf/10.1002/stvr.1562},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/stvr.1562},
+abstract = {SummaryTest suite augmentation techniques are used in regression testing to identify code elements in a modified program that are not adequately tested and to generate test cases to cover those elements. A defining feature of test suite augmentation techniques is the potential for reusing existing regression test suites. Our preliminary work suggests that several factors influence the efficiency and effectiveness of augmentation techniques that perform such reuse. These include the order in which target code elements are considered while generating test cases, the manner in which existing regression test cases and newly generated test cases are used, and the algorithm used to generate test cases. In this work, we present the results of two empirical studies examining these factors, considering two test case generation algorithms (concolic and genetic). The results of our studies show that the primary factor affecting augmentation using these approaches is the test case generation algorithm utilized; this affects both cost and effectiveness. The manner in which existing and newly generated test cases are utilized also has a substantial effect on efficiency and in some cases a substantial effect on effectiveness. The order in which target code elements are considered turns out to have relatively few effects when using concolic test case generation but in some cases influences the efficiency of genetic test case generation. The results of our first study, on four relatively small programs using a large number of test suites, are supported by our second study of a much larger program available in multiple versions. Together, the studies reveal a potential opportunity for creating a more cost-effective hybrid augmentation approach leveraging both concolic and genetic test case generation techniques, while appropriately utilizing our understanding of the factors that affect them. Copyright © 2014 John Wiley \& Sons, Ltd.},
+year = {2015}
+}
+
+@INPROCEEDINGS{7091291,
+  author={Kim, Yunho and Kim, Moonzoo},
+  booktitle={2014 21st Asia-Pacific Software Engineering Conference}, 
+  title={SAT-Based Bounded Software Model Checking for Embedded Software: A Case Study}, 
+  year={2014},
+  volume={1},
+  number={},
+  pages={55-62},
+  url={https://ieeexplore.ieee.org/abstract/document/7091291},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7091291},
+  keywords={Model checking;Software;Computer bugs;Upper bound;Manuals;Optimized production technology;Embedded software;Software model checking;Case study},
+  doi={10.1109/APSEC.2014.17}}
+
+@INPROCEEDINGS{6823888,
+  author={Kim, Yunho and Zu, Zhihong and Kim, Moonzoo and Cohen, Myra B. and Rothermel, Gregg},
+  booktitle={2014 IEEE Seventh International Conference on Software Testing, Verification and Validation}, 
+  title={Hybrid Directed Test Suite Augmentation: An Interleaving Framework}, 
+  year={2014},
+  volume={},
+  number={},
+  pages={263-272},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6823888},
+  url={https://ieeexplore.ieee.org/abstract/document/6823888},
+  keywords={Heuristic algorithms;Testing;Genetic algorithms;Genetics;Sociology;Statistics;Time factors},
+  doi={10.1109/ICST.2014.39}}
+
+@INPROCEEDINGS{6823877,
+  author={Moon, Seokhyeon and Kim, Yunho and Kim, Moonzoo and Yoo, Shin},
+  booktitle={2014 IEEE Seventh International Conference on Software Testing, Verification and Validation}, 
+  title={Ask the Mutants: Mutating Faulty Programs for Fault Localization}, 
+  year={2014},
+  volume={},
+  number={},
+  pages={153-162},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6823877},
+  url={https://ieeexplore.ieee.org/abstract/document/6823877},
+  keywords={Maintenance engineering;Information theory;Loss measurement;Testing;Frequency modulation;Educational institutions;mutation;fault localization},
+  doi={10.1109/ICST.2014.28}}
+
+% Fiesta: Effective fault localization to mitigate the negative effect of coincidentally correct tests
+
+% Hybrid-MUSE: Mutating faulty programs for precise fault localization
+
+@INPROCEEDINGS{6693109,
+  author={Kim, Yunho and Kim, Youil and Taeksu Kim and Gunwoo Lee and Jang, Yoonkyu and Kim, Moonzoo},
+  booktitle={2013 28th IEEE/ACM International Conference on Automated Software Engineering (ASE)}, 
+  title={Automated unit testing of large industrial embedded software using concolic testing}, 
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6693109},
+  url={https://ieeexplore.ieee.org/abstract/document/6693109},
+  year={2013},
+  volume={},
+  number={},
+  pages={519-528},
+  keywords={Testing;Computer bugs;Arrays;Embedded software;Hardware},
+  doi={10.1109/ASE.2013.6693109}}
+
+% 사례연구를 통한 정적 프로그램 분석 기법을 사용하는 도구의 비교
+
+% 정적 프로그램 분석 기법을 사용하는 도구의 비교: Coverity 와 Sparrow 를 사용한 libexif 사례 연구: Coverity 와 Sparrow 를 사용한 libexif 사례 연구
+
+@INPROCEEDINGS{6227105,
+  author={Kim, Yunho and Kim, Moonzoo and Kim, Young Joo and Jang, Yoonkyu},
+  booktitle={2012 34th International Conference on Software Engineering (ICSE)}, 
+  title={Industrial application of concolic testing approach: A case study on libexif by using CREST-BV and KLEE}, 
+  year={2012},
+  volume={},
+  number={},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6227105},
+  url={https://ieeexplore.ieee.org/abstract/document/6227105},
+  pages={1143-1152},
+  keywords={Testing;Computer bugs;Smart phones;Instruments;Search problems;Concrete;Cameras},
+  doi={10.1109/ICSE.2012.6227105}}
+
+@Article{Kim2012,
+author={Kim, Moonzoo
+and Kim, Yunho
+and Choi, Yunja},
+title={Concolic testing of the multi-sector read operation for flash storage platform software},
+journal={Formal Aspects of Computing},
+year={2012},
+month={May},
+day={01},
+volume={24},
+number={3},
+pages={355-374},
+abstract={In today's information society, flash memory has become a virtually indispensable component, particularlyfor mobile devices. In order for mobile devices to operate successfully, it is essential that flash memorybe controlled correctly through flash storage platform software such as the file system, flash translation layer,and low-level device drivers. However, as is typical for embedded software, conventional testing methods oftenfail to detect hidden flaws in the software due to the difficulty of creating effective test cases. As a differentapproach, model checking techniques guarantee a complete analysis, but only on a limited scale. In this paper,we describe an empirical study wherein a concolic testing method is applied to the multi-sector read operation for flash storage platform software. This method combines a concrete dynamic execution and a symbolic execution to automatically generate test cases for full path coverage. Through the experiments, we analyze the advantages and weaknesses of the concolic testing approach on the flash storage platform software.},
+issn={1433-299X},
+doi={10.1007/s00165-011-0200-9},
+url={https://doi.org/10.1007/s00165-011-0200-9},
+pdf={https://swtv.kaist.ac.kr/files/publications/international_journals/facj12.pdf}
+}
+
+@INPROCEEDINGS{6200090,
+  author={Kim, Moonzoo and Kim, Yunho and Rothermel, Gregg},
+  booktitle={2012 IEEE Fifth International Conference on Software Testing, Verification and Validation}, 
+  title={A Scalable Distributed Concolic Testing Approach: An Empirical Evaluation}, 
+  year={2012},
+  volume={},
+  number={},
+  pages={340-349},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6200090},
+  url={https://ieeexplore.ieee.org/abstract/document/6200090},
+  keywords={Servers;Testing;Scalability;Concrete;Partitioning algorithms;Java;Virtual machining},
+  doi={10.1109/ICST.2012.114}}
+
+@INPROCEEDINGS{6200131,
+  author={Kim, Moonzoo and Kim, Yunho and Jang, Yoonkyu},
+  booktitle={2012 IEEE Fifth International Conference on Software Testing, Verification and Validation}, 
+  title={Industrial Application of Concolic Testing on Embedded Software: Case Studies}, 
+  year={2012},
+  volume={},
+  number={},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6200131},
+  url={https://ieeexplore.ieee.org/abstract/document/6200131},
+  pages={390-399},
+  keywords={Testing;Frequency modulation;Security;Libraries;Concrete;Probes},
+  doi={10.1109/ICST.2012.119}}
+
+% Comparison of Search Strategies of KLEE Concolic Testing Tool
+
+% Concolic Testing 도구 KLEE 의 다양한 탐색 방법 비교
+
+% CREST-BV: An Improved Concolic Testing Technique with Bitwise Operations Support for Embedded Software
+
+% A Case Study of the Application of Dynamic Symbolic Execution to Real-World Binary Programs
+
+% 정적 프로그램 분석 기법을 사용하는 도구의 비교-Coverity 와 Sparrow 를 사용한 libexif 사례 연구
+
+% CREST-BV: 임베디드 소프트웨어를 위한 Bitwise 연산을지원하는 Concolic 테스팅 기법
+
+@INPROCEEDINGS{6132963,
+  author={Xu, Zhihong and Kim, Yunho and Kim, Moonzoo and Rothermel, Gregg},
+  booktitle={2011 IEEE 22nd International Symposium on Software Reliability Engineering}, 
+  title={A Hybrid Directed Test Suite Augmentation Technique}, 
+  year={2011},
+  volume={},
+  number={},
+  pages={150-159},
+  pdf = {https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6132963},
+  url = {https://ieeexplore.ieee.org/abstract/document/6132963},
+  keywords={Genetics;Testing;Hybrid power systems;Biological cells;Genetic algorithms;Concrete;Computer science;test suite augmentation;concolic testing;genetic test generation},
+  doi={10.1109/ISSRE.2011.21}}
+
+% Concolic 테스팅 기법을 구현한 KLEE 테스팅 도구의 사례 연구
+
+@InProceedings{10.1007/978-3-642-24372-1_5,
+author="Kim, Moonzoo
+and Kim, Yunho",
+editor="Bultan, Tevfik
+and Hsiung, Pao-Ann",
+title="Automated Analysis of Industrial Embedded Software",
+booktitle="Automated Technology for Verification and Analysis",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="51--59",
+pdf = {https://swtv.kaist.ac.kr/files/publications/international_conference/atva2011.pdf},
+url = {https://link.springer.com/chapter/10.1007/978-3-642-24372-1_5},
+abstract="For the last few decades, automated software analysis techniques such as software model checking and concolic testing have advanced in a large degree. However, such techniques are not frequently applied to industrial software due to steep learning curve and hidden costs to apply these techniques to industrial software in practice. Therefore, to enable technology transfer to industry, it is essential to conduct concrete case studies applying automated techniques to real-world industrial software. These studies can serve as references for field engineers who want to improve quality of software by adopting automated analysis techniques. Furthermore, concrete applications of such techniques can guide new research goals and directions to solve practical limitations observed in the studies. In this paper, we describe our experience of applying various automated software analysis techniques to industrial embedded software such as flash memory storage platform and smartphone platform.",
+isbn="978-3-642-24372-1"
+}
+
+@inproceedings{10.1145/2025113.2025180,
+author = {Kim, Yunho and Kim, Moonzoo},
+title = {SCORE: a scalable concolic testing tool for reliable embedded software},
+year = {2011},
+isbn = {9781450304436},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2025113.2025180},
+doi = {10.1145/2025113.2025180},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/2025113.2025180},
+abstract = {Current industrial testing practices often generate test cases in a manual manner, which degrades both the effectiveness and efficiency of testing. To alleviate this problem, concolic testing generates test cases that can achieve high coverage in an automated fashion. One main task of concolic testing is to extract symbolic information from a concrete execution of a target program at runtime. Thus, a design decision on how to extract symbolic information affects efficiency, effectiveness, and applicability of concolic testing. We have developed a Scalable COncolic testing tool for REliable embedded software (SCORE) that targets embedded C programs. SCORE instruments a target C program to extract symbolic information and applies concolic testing to a target program in a scalable manner by utilizing a large number of distributed computing nodes. In this paper, we describe our design decisions that are implemented in SCORE and demonstrate the performance of SCORE through the experiments on the SIR benchmarks.},
+booktitle = {Proceedings of the 19th ACM SIGSOFT Symposium and the 13th European Conference on Foundations of Software Engineering},
+pages = {420-423},
+numpages = {4},
+keywords = {embedded software, distributed concolic testing},
+location = {Szeged, Hungary},
+series = {ESEC/FSE '11}
+}
+
+% Concolic testing on embedded software-case studies on mobile platform programs
+
+% Distributed concolic algorithm of the SCORE framework
+
+% A scalable distributed concolic testing approach
+
+@inproceedings{10.1145/1882291.1882330,
+author = {Xu, Zhihong and Kim, Yunho and Kim, Moonzoo and Rothermel, Gregg and Cohen, Myra B.},
+title = {Directed test suite augmentation: techniques and tradeoffs},
+year = {2010},
+isbn = {9781605587912},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1882291.1882330},
+doi = {10.1145/1882291.1882330},
+pdf = {https://dl.acm.org/doi/pdf/10.1145/1882291.1882330},
+abstract = {Test suite augmentation techniques are used in regression testing to identify code elements affected by changes and to generate test cases to cover those elements. Our preliminary work suggests that several factors influence the cost and effectiveness of test suite augmentation techniques. These include the order in which affected elements are considered while generating test cases, the manner in which existing regression test cases and newly generated test cases are used, and the algorithm used to generate test cases. In this work, we present the results of an empirical study examining these factors, considering two test case generation algorithms (concolic and genetic). The results of our experiment show that the primary factor affecting augmentation is the test case generation algorithm utilized; this affects both cost and effectiveness. The manner in which existing and newly generated test cases are utilized also has a substantial effect on efficiency but a lesser effect on effectiveness. The order in which affected elements are considered turns out to have relatively few effects when using concolic test case generation, but more substantial effects when using genetic test case generation.},
+booktitle = {Proceedings of the Eighteenth ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+pages = {257-266},
+numpages = {10},
+keywords = {test suite augmentation, regression testing, genetic algorithms, empirical studies, concolic testing},
+location = {Santa Fe, New Mexico, USA},
+series = {FSE '10}
+}
+
+@InProceedings{10.1007/978-3-642-14808-8_14,
+author="Kim, Yunho
+and Kim, Moonzoo
+and Dang, Nam",
+editor="Cavalcanti, Ana
+and Deharbe, David
+and Gaudel, Marie-Claude
+and Woodcock, Jim",
+title="Scalable Distributed Concolic Testing: A Case Study on a Flash Storage Platform ",
+booktitle="Theoretical Aspects of Computing -- ICTAC 2010",
+year="2010",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="199--213",
+pdf={https://swtv.kaist.ac.kr/files/publications/international_conference/ictac10_sdct.pdf},
+url={https://link.springer.com/chapter/10.1007/978-3-642-14808-8_14},
+doi={https://doi.org/10.1007/978-3-642-14808-8_14},
+abstract="Flash memory has become a virtually indispensable component for mobile devices in today's information society. However, conventional testing methods often fail to detect hidden bugs in flash file systems due to the difficulties involved in creating effective test cases. In contrast, the approach of model checking guarantees a complete analysis, but only on a limited scale. In the previous work, the authors applied concolic testing to the multi-sector read operation of a Samsung flash storage platform as a trade-off between the aforementioned two methods.",
+isbn="978-3-642-14808-8"
+}
+
+@ARTICLE{5510242,
+  author={Kim, Moonzoo and Kim, Yunho and Kim, Hotae},
+  journal={IEEE Transactions on Software Engineering}, 
+  title={A Comparative Study of Software Model Checkers as Unit Testing Tools: An Industrial Case Study}, 
+  year={2011},
+  volume={37},
+  number={2},
+  pages={146-160},
+  pdf={https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5510242},
+  url={https://ieeexplore.ieee.org/abstract/document/5510242},
+  keywords={Software tools;Software testing;Computer industry;Manufacturing industries;System testing;Embedded software;File systems;Costs;Flash memory;Refining;Embedded software verification;software model checking;bounded model checking;CEGAR-based model checking;flash file systems.},
+  doi={10.1109/TSE.2010.68}}
+
+@InProceedings{10.1007/978-3-642-10452-7_17,
+author="Kim, Moonzoo
+and Kim, Yunho",
+editor="Oliveira, Marcel Vin{\'i}cius Medeiros
+and Woodcock, Jim",
+title="Concolic Testing of the Multi-sector Read Operation for Flash Memory File System",
+booktitle="Formal Methods: Foundations and Applications",
+year="2009",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="251--265",
+doi={https://doi.org/10.1007/978-3-642-10452-7_17},
+url = {https://link.springer.com/chapter/10.1007/978-3-642-10452-7_17},
+pdf = {https://www.researchgate.net/profile/Yunho-Kim/publication/221136356_Concolic_Testing_of_the_Multi-sector_Read_Operation_for_Flash_Memory_File_System/links/00b4953ca38ffc7e75000000/Concolic-Testing-of-the-Multi-sector-Read-Operation-for-Flash-Memory-File-System.pdf},
+abstract="In today's information society, flash memory has become a virtually indispensable component, particularly for mobile devices. In order for mobile devices to operate successfully, it is essential that flash memory be controlled correctly through file system software. However, as is typical for embedded software, conventional testing methods often fail to detect hidden flaws in the software due to the difficulty of creating effective test cases. As a different approach, model checking techniques guarantee a complete analysis, but only on a limited scale.",
+isbn="978-3-642-10452-7"
+}
+
+@InProceedings{10.1007/978-3-642-02498-6_43,
+author="Kim, Yunho
+and Thompson, Paul M.
+and Toga, Arthur W.
+and Vese, Luminita
+and Zhan, Liang",
+editor="Prince, Jerry L.
+and Pham, Dzung L.
+and Myers, Kyle J.",
+title="HARDI Denoising: Variational Regularization of the Spherical Apparent Diffusion Coefficient sADC",
+booktitle="Information Processing in Medical Imaging",
+year="2009",
+doi = {https://doi.org/10.1007/978-3-642-02498-6_43},
+url = {https://link.springer.com/chapter/10.1007/978-3-642-02498-6_43},
+pdf = {http://www.math.ucla.edu/~lvese/PAPERS/Yunho_IPMI2009_Hardi.pdf},
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="515--527",
+abstract="We denoise HARDI (High Angular Resolution Diffusion Imaging) data arising in medical imaging. Diffusion imaging is a relatively new and powerful method to measure the 3D profile of water diffusion at each point. This can be used to reconstruct fiber directions and pathways in the living brain, providing detailed maps of fiber integrity and connectivity. HARDI is a powerful new extension of diffusion imaging, which goes beyond the diffusion tensor imaging (DTI) model: mathematically, intensity data is given at every voxel and at any direction on the sphere. However, HARDI data is usually highly contaminated with noise, depending on the b-value which is a tuning parameter pre-selected to collect the data. Larger b-values help to collect more accurate information in terms of measuring diffusivity, but more noise is generated by many factors as well. So large b-values are preferred, if we can satisfactorily reduce the noise without losing the data structure. We propose a variational method to denoise HARDI data by denoising the spherical Apparent Diffusion Coefficient (sADC), a field of radial functions derived from the data. We use vectorial total variation regularization, an L1 data fidelity term and the logarithmic barrier function in the minimization. We present experiments of denoising synthetic and real HARDI data.",
+isbn="978-3-642-02498-6"
+}
+
+@INPROCEEDINGS{4639323,
+  author={Kim, Moonzoo and Kim, Yunho and Kim, Hotae},
+  booktitle={2008 23rd IEEE/ACM International Conference on Automated Software Engineering}, 
+  title={Unit Testing of Flash Memory Device Driver through a SAT-Based Model Checker}, 
+  year={2008},
+  volume={},
+  number={},
+  pages={198-207},
+  pdf = {https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4639323},
+  url = {https://ieeexplore.ieee.org/abstract/document/4639323},
+  keywords={Software;Flash memory;Testing;Driver circuits;Analytical models;Random access memory;Mathematical model},
+  doi={10.1109/ASE.2008.30}}
+
+@InProceedings{10.1007/978-3-540-85114-1_12,
+author="Kim, Moonzoo
+and Choi, Yunja
+and Kim, Yunho
+and Kim, Hotae",
+editor="Havelund, Klaus
+and Majumdar, Rupak
+and Palsberg, Jens",
+title="Formal Verification of a Flash Memory Device Driver -- An Experience Report ",
+booktitle="Model Checking Software",
+year="2008",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="144--159",
+url = {https://link.springer.com/chapter/10.1007/978-3-540-85114-1_12},
+pdf = {http://spinroot.com/spin/Workshops/ws08/spin2008_submission_21.pdf},
+doi = {https://doi.org/10.1007/978-3-540-85114-1_12},
+abstract="Flash memory has become virtually indispensable in most mobile devices. In order for mobile devices to operate successfully, it is essential that flash memory be controlled correctly through the device driver software. However, as is typical for embedded software, conventional testing methods often fail to detect hidden flaws in the complex device driver software. This deficiency incurs significant development and operation overhead to the manufacturers.",
+isbn="978-3-540-85114-1"
+}
+
+@INPROCEEDINGS{4539576,
+  author={Kim, Moonzoo and Choi, Yunja and Kim, Yunho and Kim, Hotae},
+  booktitle={2008 1st International Conference on Software Testing, Verification, and Validation}, 
+  title={Pre-testing Flash Device Driver through Model Checking Techniques}, 
+  year={2008},
+  volume={},
+  number={},
+  pages={475-484},
+  pdf = {https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4539576},
+  url = {https://ieeexplore.ieee.org/abstract/document/4539576},
+  keywords={Software testing;Flash memory;Embedded software;Driver circuits;Manufacturing;Explosions;Scalability;Laboratories;Mobile handsets;Digital cameras;Model Checking;Testing;Embedded Software},
+  doi={10.1109/ICST.2008.55}}

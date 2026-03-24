@@ -33,11 +33,14 @@ model Member {
   nameEn      String?
   photo       String?
   role        String   // "professor" | "postdoc" | "phd" | "ms" | "intern" | "alumni"
+  bio         String?
   interest    String?
   email       String?
   homepage    String?
   github      String?
   scholar     String?
+  cvUrl       String?
+  authorAliases String @default("[]") // JSON array of name variants for publication matching
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -50,6 +53,7 @@ model Publication {
   venue       String
   year        Int
   featured    Boolean  @default(false)
+  url         String?
   pdfUrl      String?
   doiUrl      String?
   projectUrl  String?
@@ -84,7 +88,7 @@ model Research {
 
 model SiteConfig {
   id          String   @id @default("main")
-  labName     String   @default("SE Lab")
+  labName     String   @default("SELab")
   tagline     String   @default("Software Engineering Laboratory")
   description String   @default("")
   bannerUrl   String?

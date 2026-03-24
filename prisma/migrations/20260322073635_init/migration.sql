@@ -82,7 +82,7 @@ CREATE TABLE "Research" (
 -- CreateTable
 CREATE TABLE "SiteConfig" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT 'main',
-    "labName" TEXT NOT NULL DEFAULT 'SE Lab',
+    "labName" TEXT NOT NULL DEFAULT 'SELab',
     "tagline" TEXT NOT NULL DEFAULT 'Software Engineering Laboratory',
     "description" TEXT NOT NULL DEFAULT '',
     "bannerUrl" TEXT,

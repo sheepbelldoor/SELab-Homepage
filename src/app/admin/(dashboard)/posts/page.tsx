@@ -61,38 +61,45 @@ export default function AdminPostsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>제목</TableHead>
-                <TableHead>작성일</TableHead>
-                <TableHead className="w-16">관리</TableHead>
+                <TableHead className="w-20">분류</TableHead>
+                <TableHead className="w-20">상태</TableHead>
+                <TableHead className="w-28">작성일</TableHead>
+                <TableHead className="w-24">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {posts.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Link href={`/admin/posts/${post.id}`} className="font-medium hover:text-primary transition-colors">
-                        {post.title}
-                      </Link>
-                      <div className="flex items-center gap-1.5">
-                        <Badge variant="secondary" className="text-xs">
-                          {post.category === "notice" ? "공지" : "소식"}
-                        </Badge>
-                        <Badge variant={post.published ? "default" : "outline"} className="text-xs">
-                          {post.published ? "공개" : "비공개"}
-                        </Badge>
-                        {post.pinned && (
-                          <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50 text-xs">고정</Badge>
-                        )}
-                      </div>
+                    <Link href={`/admin/posts/${post.id}`} className="font-medium hover:text-primary transition-colors">
+                      {post.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="text-xs">
+                      {post.category === "notice" ? "공지" : "소식"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Badge variant={post.published ? "default" : "outline"} className="text-xs">
+                        {post.published ? "공개" : "비공개"}
+                      </Badge>
+                      {post.pinned && (
+                        <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50 text-xs">고정</Badge>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground whitespace-nowrap">
                     {new Date(post.createdAt).toLocaleDateString("ko-KR")}
                   </TableCell>
                   <TableCell>
-                    <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(post.id)}>
-                      삭제
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/admin/posts/${post.id}`} className="text-sm text-primary hover:underline">수정</Link>
+                      <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(post.id)}>
+                        삭제
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

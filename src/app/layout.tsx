@@ -8,8 +8,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "SE Lab - Software Engineering Laboratory",
-  description: "소프트웨어 공학 연구실 홈페이지",
+  title: "SELab - Software Engineering Laboratory",
+  description: "한양대학교 소프트웨어공학 연구실 홈페이지",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${geistSans.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );
 }

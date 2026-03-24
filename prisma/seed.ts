@@ -17,18 +17,19 @@ async function main() {
     where: { id: "main" },
     update: {},
     create: {
-      labName: "SE Lab",
-      tagline: "Software Engineering Laboratory",
+      labName: "Software Engineering Laboratory",
+      tagline: "떼잉..",
       description:
         "소프트웨어 공학의 핵심 문제를 해결하고, 더 나은 소프트웨어 개발 방법론을 연구합니다.",
-      address: "서울특별시 OO구 OO로 OO",
-      building: "공학관 000호",
-      email: "selab@university.ac.kr",
-      phone: "02-000-0000",
+      address: "서울특별시 성동구 왕십리로 222",
+      building: "한양대학교 ITBT 614호",
+      email: "yunhokim@hanyang.ac.kr",
+      phone: "02-2220-2385",
+      mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d559.1386440000607!2d127.0490294341321!3d37.55586919885408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca59a112efe17%3A0x6c8e2441f4b2ff7e!2z7ZWc7JaR64yA7ZWZ6rWQIElUQlTqtIA!5e0!3m2!1sko!2skr!4v1774328127956!5m2!1sko!2skr",
       aboutContent:
-        "SE Lab은 소프트웨어 공학 분야의 다양한 연구를 수행하는 연구실입니다. 소프트웨어 개발 프로세스, 품질 보증, 테스팅, 유지보수 등의 주제를 중심으로 실용적이고 혁신적인 연구를 진행하고 있습니다.",
+        "SELab은 소프트웨어 공학 분야의 다양한 연구를 수행하는 연구실입니다. 소프트웨어 개발 프로세스, 품질 보증, 테스팅, 유지보수 등의 주제를 중심으로 실용적이고 혁신적인 연구를 진행하고 있습니다.",
       joinUsContent:
-        "SE Lab에서는 열정적인 대학원생 및 인턴을 모집하고 있습니다. 소프트웨어 공학에 관심이 있는 분은 언제든지 연락해 주세요.",
+        "SELab에서는 열정적인 대학원생 및 인턴을 모집하고 있습니다. 소프트웨어 공학에 관심이 있는 분은 언제든지 연락해 주세요.",
     },
   });
 
@@ -57,16 +58,48 @@ async function main() {
     await prisma.research.create({ data: area });
   }
 
-  await prisma.member.create({
-    data: {
-      name: "홍길동",
-      nameEn: "Gildong Hong",
+  const members = [
+    {
+      name: "김윤호",
+      nameEn: "Yunho Kim",
       role: "professor",
-      interest: "Software Testing, Program Analysis",
-      email: "gdhong@university.ac.kr",
+      bio: "한양대학교 컴퓨터소프트웨어학부 조교수",
+      interest: "Software Testing, Program Analysis, Fuzzing",
+      email: "yunhokim@hanyang.ac.kr",
+      homepage: "https://yunhokim.github.io",
+      scholar: "https://scholar.google.com/citations?user=EXAMPLE",
       sortOrder: 0,
     },
-  });
+    {
+      name: "홍길동",
+      nameEn: "Gildong Hong",
+      role: "phd",
+      interest: "Mutation Testing, Fault Localization",
+      email: "gdhong@example.ac.kr",
+      github: "https://github.com/gdhong",
+      sortOrder: 1,
+    },
+    {
+      name: "김철수",
+      nameEn: "Cheolsu Kim",
+      role: "ms",
+      interest: "Fuzzing, Collaborative Testing",
+      email: "cskim@example.ac.kr",
+      sortOrder: 2,
+    },
+    {
+      name: "이영희",
+      nameEn: "Younghee Lee",
+      role: "ms",
+      interest: "AI for SE, Code Generation",
+      email: "yhlee@example.ac.kr",
+      sortOrder: 3,
+    },
+  ];
+
+  for (const m of members) {
+    await prisma.member.create({ data: m });
+  }
 
   console.log("Seed data created successfully");
 }

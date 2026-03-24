@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function AdminSettingsPage() {
-  const [config, setConfig] = useState<Record<string, string>>({});
+  const [config, setConfig] = useState<Record<string, string> | null>(null);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -25,6 +25,8 @@ export default function AdminSettingsPage() {
         if (data) {
           setConfig(data);
           setBannerUrl(data.bannerUrl || null);
+        } else {
+          setConfig({});
         }
       });
   }, []);
@@ -75,6 +77,15 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       setPwMsg(data.error || "비밀번호 변경에 실패했습니다.");
     }
+  }
+
+  if (!config) {
+    return (
+      <div>
+        <h1 className="text-2xl font-bold mb-8">사이트 설정</h1>
+        <p className="text-muted-foreground">로딩 중...</p>
+      </div>
+    );
   }
 
   return (

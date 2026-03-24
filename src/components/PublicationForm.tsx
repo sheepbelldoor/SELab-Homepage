@@ -35,6 +35,7 @@ export default function PublicationForm({ publication, isEdit }: Props) {
         venue: form.get("venue"),
         year: Number(form.get("year")),
         featured,
+        url: form.get("url") || null,
         pdfUrl: form.get("pdfUrl") || null,
         doiUrl: form.get("doiUrl") || null,
         codeUrl: form.get("codeUrl") || null,
@@ -71,6 +72,10 @@ export default function PublicationForm({ publication, isEdit }: Props) {
               <Label htmlFor="year">연도</Label>
               <Input id="year" name="year" type="number" defaultValue={(publication?.year as number) || new Date().getFullYear()} required />
             </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="url">논문 URL (제목 클릭 시 이동)</Label>
+            <Input id="url" name="url" placeholder="https://..." defaultValue={(publication?.url as string) || ""} />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">

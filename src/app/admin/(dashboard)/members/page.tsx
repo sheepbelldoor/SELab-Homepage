@@ -70,29 +70,33 @@ export default function AdminMembersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>이름</TableHead>
+                <TableHead className="w-28">역할</TableHead>
                 <TableHead>이메일</TableHead>
-                <TableHead className="w-16">관리</TableHead>
+                <TableHead className="w-24">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {members.map((member) => (
                 <TableRow key={member.id}>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Link href={`/admin/members/${member.id}`} className="font-medium hover:text-primary transition-colors">
-                        {member.name}
-                        {member.nameEn && <span className="text-muted-foreground ml-1 text-sm font-normal">({member.nameEn})</span>}
-                      </Link>
-                      <Badge variant="secondary" className="text-xs">
-                        {roleLabels[member.role] || member.role}
-                      </Badge>
-                    </div>
+                    <Link href={`/admin/members/${member.id}`} className="font-medium hover:text-primary transition-colors">
+                      {member.name}
+                      {member.nameEn && <span className="text-muted-foreground ml-1 text-sm font-normal">({member.nameEn})</span>}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="text-xs">
+                      {roleLabels[member.role] || member.role}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">{member.email || "-"}</TableCell>
                   <TableCell>
-                    <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(member.id)}>
-                      삭제
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/admin/members/${member.id}`} className="text-sm text-primary hover:underline">수정</Link>
+                      <Button variant="link" size="sm" className="h-auto p-0 text-destructive" onClick={() => handleDelete(member.id)}>
+                        삭제
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
