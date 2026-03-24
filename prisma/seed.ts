@@ -211,11 +211,11 @@ async function main() {
   // --- Test post ---
   await prisma.post.create({
     data: {
-      title: "SELab 홈페이지가 오픈되었습니다!",
+      title: "SELab 홈페이지가 오픈!",
       content: "안녕하세요, Software Engineering Laboratory 홈페이지가 새롭게 오픈되었습니다. 많은 관심 부탁드립니다.",
       category: "notice",
       published: true,
-      pinned: true,
+      pinned: false,
     },
   });
 
