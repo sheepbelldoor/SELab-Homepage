@@ -41,6 +41,8 @@ model Member {
   scholar     String?
   cvUrl       String?
   authorAliases String @default("[]") // JSON array of name variants for publication matching
+  education   String   @default("[]") // JSON array of education entries
+  awards      String   @default("[]") // JSON array of honors & awards entries
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

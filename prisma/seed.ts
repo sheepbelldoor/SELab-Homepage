@@ -116,7 +116,7 @@ async function main() {
     update: {},
     create: {
       labName: "Software Engineering Laboratory",
-      tagline: "떼잉..",
+      tagline: "Hanyang University SELab",
       description:
         "소프트웨어 공학의 핵심 문제를 해결하고, 더 나은 소프트웨어 개발 방법론을 연구합니다.",
       address: "서울특별시 성동구 왕십리로 222",

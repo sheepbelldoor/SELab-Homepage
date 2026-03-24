@@ -80,6 +80,8 @@ export default async function PeoplePage() {
                       github: member.github,
                       scholar: member.scholar,
                       cvUrl: member.cvUrl,
+                      education: (() => { try { return JSON.parse(member.education); } catch { return []; } })(),
+                      awards: (() => { try { return JSON.parse(member.awards); } catch { return []; } })(),
                       publications: memberPubs.map((p) => ({
                         id: p.id,
                         title: p.title,

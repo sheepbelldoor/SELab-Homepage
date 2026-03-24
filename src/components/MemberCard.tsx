@@ -35,6 +35,8 @@ interface Member {
   github: string | null;
   scholar: string | null;
   cvUrl: string | null;
+  education?: string[];
+  awards?: string[];
   publications?: Publication[];
 }
 
@@ -159,6 +161,40 @@ export default function MemberCard({ member }: { member: Member }) {
                   Research Interests
                 </DialogDescription>
                 <p className="text-sm text-muted-foreground">{member.interest}</p>
+              </section>
+            )}
+
+            {/* Education */}
+            {member.education && member.education.length > 0 && (
+              <section>
+                <DialogDescription className="font-semibold text-foreground text-xs uppercase tracking-wider mb-1.5">
+                  Education
+                </DialogDescription>
+                <ul className="space-y-1">
+                  {member.education.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <span className="text-muted-foreground mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0" />
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Honors & Awards */}
+            {member.awards && member.awards.length > 0 && (
+              <section>
+                <DialogDescription className="font-semibold text-foreground text-xs uppercase tracking-wider mb-1.5">
+                  Honors & Awards
+                </DialogDescription>
+                <ul className="space-y-1">
+                  {member.awards.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <span className="text-muted-foreground mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground/40 flex-shrink-0" />
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </section>
             )}
 

@@ -5,11 +5,11 @@ import { sanitizeString, sanitizeInt, sanitizeUrl } from "@/lib/validate";
 
 const VALID_ROLES = ["professor", "postdoc", "msphd", "phd", "ms", "intern", "alumni"];
 
-function sanitizeAuthorAliases(value: unknown): string {
+function sanitizeStringArray(value: unknown, maxItemLength = 200): string {
   if (!Array.isArray(value)) return "[]";
   const cleaned = value
     .filter((v): v is string => typeof v === "string")
-    .map((v) => v.trim().slice(0, 200))
+    .map((v) => v.trim().slice(0, maxItemLength))
     .filter((v) => v.length > 0);
   return JSON.stringify(cleaned);
 }
@@ -43,7 +43,9 @@ export async function PUT(
       github: sanitizeUrl(body.github),
       scholar: sanitizeUrl(body.scholar),
       cvUrl: sanitizeUrl(body.cvUrl),
-      authorAliases: sanitizeAuthorAliases(body.authorAliases),
+      authorAliases: sanitizeStringArray(body.authorAliases),
+      education: sanitizeStringArray(body.education, 500),
+      awards: sanitizeStringArray(body.awards, 500),
       sortOrder: sanitizeInt(body.sortOrder, 0),
     },
   });

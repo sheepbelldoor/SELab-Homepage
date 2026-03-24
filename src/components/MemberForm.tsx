@@ -35,6 +35,31 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
   const [aliases, setAliases] = useState<string[]>(initialAliases);
   const [newAlias, setNewAlias] = useState("");
 
+  // Parse education from member data
+  const initialEducation: string[] = (() => {
+    try {
+      const raw = member?.education;
+      if (typeof raw === "string") return JSON.parse(raw);
+      if (Array.isArray(raw)) return raw;
+    } catch { /* ignore */ }
+    return [];
+  })();
+
+  // Parse awards from member data
+  const initialAwards: string[] = (() => {
+    try {
+      const raw = member?.awards;
+      if (typeof raw === "string") return JSON.parse(raw);
+      if (Array.isArray(raw)) return raw;
+    } catch { /* ignore */ }
+    return [];
+  })();
+
+  const [education, setEducation] = useState<string[]>(initialEducation);
+  const [newEducation, setNewEducation] = useState("");
+  const [awards, setAwards] = useState<string[]>(initialAwards);
+  const [newAward, setNewAward] = useState("");
+
   function addAlias() {
     const trimmed = newAlias.trim();
     if (trimmed && !aliases.includes(trimmed)) {
@@ -71,6 +96,8 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
         cvUrl: form.get("cvUrl") || null,
         photo,
         authorAliases: aliases,
+        education,
+        awards,
         sortOrder: Number(form.get("sortOrder")) || 0,
       }),
     });
@@ -164,6 +191,106 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
                     <button
                       type="button"
                       onClick={() => removeAlias(i)}
+                      className="ml-1 text-muted-foreground hover:text-foreground"
+                    >
+                      &times;
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Education */}
+          <div className="space-y-2">
+            <Label>Education</Label>
+            <p className="text-xs text-muted-foreground">
+              학력 사항을 추가하세요. (예: &quot;Ph.D. in Computer Science, MIT, 2020&quot;)
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={newEducation}
+                onChange={(e) => setNewEducation(e.target.value)}
+                placeholder="예: M.S. in Computer Science, Hanyang University, 2025"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const trimmed = newEducation.trim();
+                    if (trimmed && !education.includes(trimmed)) {
+                      setEducation([...education, trimmed]);
+                    }
+                    setNewEducation("");
+                  }
+                }}
+              />
+              <Button type="button" variant="outline" onClick={() => {
+                const trimmed = newEducation.trim();
+                if (trimmed && !education.includes(trimmed)) {
+                  setEducation([...education, trimmed]);
+                }
+                setNewEducation("");
+              }}>
+                추가
+              </Button>
+            </div>
+            {education.length > 0 && (
+              <div className="flex flex-col gap-1.5 mt-2">
+                {education.map((item, i) => (
+                  <Badge key={i} variant="secondary" className="text-sm py-1 px-3 gap-1.5 w-fit">
+                    {item}
+                    <button
+                      type="button"
+                      onClick={() => setEducation(education.filter((_, idx) => idx !== i))}
+                      className="ml-1 text-muted-foreground hover:text-foreground"
+                    >
+                      &times;
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Honors & Awards */}
+          <div className="space-y-2">
+            <Label>Honors & Awards</Label>
+            <p className="text-xs text-muted-foreground">
+              수상 및 명예 사항을 추가하세요.
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={newAward}
+                onChange={(e) => setNewAward(e.target.value)}
+                placeholder="예: Best Paper Award, ICSE 2024"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const trimmed = newAward.trim();
+                    if (trimmed && !awards.includes(trimmed)) {
+                      setAwards([...awards, trimmed]);
+                    }
+                    setNewAward("");
+                  }
+                }}
+              />
+              <Button type="button" variant="outline" onClick={() => {
+                const trimmed = newAward.trim();
+                if (trimmed && !awards.includes(trimmed)) {
+                  setAwards([...awards, trimmed]);
+                }
+                setNewAward("");
+              }}>
+                추가
+              </Button>
+            </div>
+            {awards.length > 0 && (
+              <div className="flex flex-col gap-1.5 mt-2">
+                {awards.map((item, i) => (
+                  <Badge key={i} variant="secondary" className="text-sm py-1 px-3 gap-1.5 w-fit">
+                    {item}
+                    <button
+                      type="button"
+                      onClick={() => setAwards(awards.filter((_, idx) => idx !== i))}
                       className="ml-1 text-muted-foreground hover:text-foreground"
                     >
                       &times;
