@@ -1,7 +1,105 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
+
+// --- Inline BibTeX parser (mirrors src/lib/bibtex-parser.ts) ---
+function parseBibtex(input: string) {
+  const entries: Array<{
+    title: string;
+    authors: string;
+    venue: string;
+    year: number;
+    url: string | null;
+    pdfUrl: string | null;
+    doiUrl: string | null;
+    codeUrl: string | null;
+    videoUrl: string | null;
+  }> = [];
+
+  const entryRegex = /@(\w+)\s*\{([^,]*),/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = entryRegex.exec(input)) !== null) {
+    const startIdx = match.index + match[0].length;
+    let depth = 1;
+    let endIdx = startIdx;
+    for (let i = startIdx; i < input.length && depth > 0; i++) {
+      if (input[i] === "{") depth++;
+      else if (input[i] === "}") depth--;
+      if (depth === 0) endIdx = i;
+    }
+
+    const body = input.slice(startIdx, endIdx);
+    const fields = parseFields(body);
+
+    const title = cleanValue(fields["title"] || "");
+    if (!title) continue;
+
+    const authors = cleanValue(fields["author"] || "").replace(/\s+and\s+/g, ", ");
+    const venue = cleanValue(fields["journal"] || "") || cleanValue(fields["booktitle"] || "");
+    const yearStr = cleanValue(fields["year"] || "");
+    const year = parseInt(yearStr, 10) || new Date().getFullYear();
+
+    const doiRaw = cleanValue(fields["doi"] || "");
+    const doiUrl = doiRaw
+      ? doiRaw.startsWith("http") ? doiRaw : `https://doi.org/${doiRaw}`
+      : null;
+
+    entries.push({
+      title,
+      authors,
+      venue,
+      year,
+      url: cleanValue(fields["url"] || "") || null,
+      pdfUrl: cleanValue(fields["pdf"] || "") || null,
+      doiUrl,
+      codeUrl: cleanValue(fields["code"] || "") || null,
+      videoUrl: cleanValue(fields["video"] || "") || null,
+    });
+  }
+  return entries;
+}
+
+function parseFields(body: string): Record<string, string> {
+  const fields: Record<string, string> = {};
+  const fieldRegex = /(\w+)\s*=\s*/g;
+  let m: RegExpExecArray | null;
+  while ((m = fieldRegex.exec(body)) !== null) {
+    const fieldName = m[1].toLowerCase();
+    const valueStart = m.index + m[0].length;
+    const value = extractValue(body, valueStart);
+    if (value !== null) fields[fieldName] = value;
+  }
+  return fields;
+}
+
+function extractValue(body: string, start: number): string | null {
+  const ch = body[start];
+  if (ch === "{") {
+    let depth = 1;
+    let i = start + 1;
+    for (; i < body.length && depth > 0; i++) {
+      if (body[i] === "{") depth++;
+      else if (body[i] === "}") depth--;
+    }
+    return body.slice(start + 1, i - 1);
+  } else if (ch === '"') {
+    const end = body.indexOf('"', start + 1);
+    if (end === -1) return null;
+    return body.slice(start + 1, end);
+  } else {
+    const end = body.indexOf(",", start);
+    if (end === -1) return body.slice(start).trim();
+    return body.slice(start, end).trim();
+  }
+}
+
+function cleanValue(value: string): string {
+  return value.replace(/[{}]/g, "").replace(/\s+/g, " ").trim();
+}
 
 async function main() {
   const adminPassword = process.env.ADMIN_PASSWORD || "admin1234";
@@ -68,6 +166,7 @@ async function main() {
       email: "yunhokim@hanyang.ac.kr",
       homepage: "https://yunho-kim.github.io/",
       scholar: "https://scholar.google.com/citations?user=kkT03G0AAAAJ&hl=ko&oi=ao",
+      authorAliases: JSON.stringify(["Yunho Kim", "Kim, Yunho"]),
       sortOrder: 0,
     },
     {
@@ -78,6 +177,7 @@ async function main() {
       email: "hyeonminmo@hanyang.ac.kr",
       github: "https://github.com/hyeonminmo",
       scholar: "https://scholar.google.com/citations?user=9s7ppLEAAAAJ&hl=ko&oi=sra",
+      authorAliases: JSON.stringify(["Hyeonmin Mo"]),
       sortOrder: 1,
     },
     {
@@ -88,6 +188,7 @@ async function main() {
       email: "snowgina@hanyang.ac.kr",
       github: "https://github.com/jung-gina",
       scholar: "",
+      authorAliases: JSON.stringify(["Gina Jung"]),
       sortOrder: 2,
     },
     {
@@ -98,12 +199,37 @@ async function main() {
       email: "jongmunyang@hanyang.ac.kr",
       github: "https://github.com/sheepbelldoor",
       scholar: "https://scholar.google.com/citations?user=UEOC_j4AAAAJ&hl=ko&oi=ao",
+      authorAliases: JSON.stringify(["Jongmun Yang"]),
       sortOrder: 3,
     },
   ];
 
   for (const m of members) {
     await prisma.member.create({ data: m });
+  }
+
+  // --- Test post ---
+  await prisma.post.create({
+    data: {
+      title: "SELab 홈페이지가 오픈되었습니다!",
+      content: "안녕하세요, Software Engineering Laboratory 홈페이지가 새롭게 오픈되었습니다. 많은 관심 부탁드립니다.",
+      category: "notice",
+      published: true,
+      pinned: true,
+    },
+  });
+
+  // --- Import publications from publish.bib ---
+  const bibPath = path.join(__dirname, "..", "publish.bib");
+  if (fs.existsSync(bibPath)) {
+    const bibContent = fs.readFileSync(bibPath, "utf-8");
+    const publications = parseBibtex(bibContent);
+    for (const pub of publications) {
+      await prisma.publication.create({ data: pub });
+    }
+    console.log(`Imported ${publications.length} publications from publish.bib`);
+  } else {
+    console.log("publish.bib not found, skipping publication import");
   }
 
   console.log("Seed data created successfully");

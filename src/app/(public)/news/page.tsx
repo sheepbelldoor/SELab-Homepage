@@ -31,15 +31,15 @@ export default async function NewsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-24">분류</TableHead>
-                  <TableHead>제목</TableHead>
-                  <TableHead className="w-28 text-right">작성일</TableHead>
+                  <TableHead className="w-24 text-center">분류</TableHead>
+                  <TableHead className="text-center">제목</TableHead>
+                  <TableHead className="w-28 text-center">작성일</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {posts.map((post) => (
                   <TableRow key={post.id}>
-                    <TableCell>
+                    <TableCell className="text-center">
                       <Badge variant={post.category === "notice" ? "destructive" : "secondary"}>
                         {post.category === "notice" ? "Notice" : "News"}
                       </Badge>
@@ -55,7 +55,7 @@ export default async function NewsPage() {
                         {post.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground whitespace-nowrap">
+                    <TableCell className="text-center text-muted-foreground whitespace-nowrap">
                       {post.createdAt.toLocaleDateString("ko-KR")}
                     </TableCell>
                   </TableRow>
