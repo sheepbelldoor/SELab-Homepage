@@ -66,8 +66,8 @@ async function main() {
       bio: "한양대학교 컴퓨터소프트웨어학부 조교수",
       interest: "",
       email: "yunhokim@hanyang.ac.kr",
-      homepage: "https://yunhokim.github.io",
-      scholar: "https://scholar.google.com/citations?user=EXAMPLE",
+      homepage: "https://yunho-kim.github.io/",
+      scholar: "https://scholar.google.com/citations?user=kkT03G0AAAAJ&hl=ko&oi=ao",
       sortOrder: 0,
     },
     {
@@ -76,7 +76,8 @@ async function main() {
       role: "msphd",
       interest: "",
       email: "hyeonminmo@hanyang.ac.kr",
-      github: "https://github.com/gdhong",
+      github: "https://github.com/hyeonminmo",
+      scholar: "https://scholar.google.com/citations?user=9s7ppLEAAAAJ&hl=ko&oi=sra",
       sortOrder: 1,
     },
     {
@@ -85,6 +86,8 @@ async function main() {
       role: "msphd",
       interest: "",
       email: "snowgina@hanyang.ac.kr",
+      github: "https://github.com/jung-gina",
+      scholar: "",
       sortOrder: 2,
     },
     {
@@ -93,6 +96,8 @@ async function main() {
       role: "msphd",
       interest: "",
       email: "jongmunyang@hanyang.ac.kr",
+      github: "https://github.com/sheepbelldoor",
+      scholar: "https://scholar.google.com/citations?user=UEOC_j4AAAAJ&hl=ko&oi=ao",
       sortOrder: 3,
     },
   ];

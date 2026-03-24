@@ -156,7 +156,7 @@ export default async function HomePage() {
       <section className="py-20 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Interested in our research?</h2>
-          <p className="text-blue-100 mb-8 max-w-xl mx-auto">
+          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             We are always looking for motivated students and researchers to join our team.
           </p>
           <Link href="/contact" className={cn(buttonVariants({ size: "lg", variant: "secondary" }))}>

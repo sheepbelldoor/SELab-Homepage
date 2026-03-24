@@ -23,8 +23,8 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-3">Contact</h4>
             <div className="space-y-2 text-sm">
-              <p>selab@university.ac.kr</p>
-              <p>공학관 000호</p>
+              <p>yunhokim@hanyang.ac.kr</p>
+              <p>한양대학교 ITBT 614호</p>
             </div>
           </div>
         </div>
