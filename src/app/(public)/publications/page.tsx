@@ -1,11 +1,34 @@
-import PageHeader from "@/components/PageHeader";
 import SafeLink from "@/components/SafeLink";
 import YearNav from "@/components/YearNav";
 import { prisma } from "@/lib/prisma";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
+
+function parseTags(tags: string): string[] {
+  try {
+    const parsed = JSON.parse(tags);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+const TAG_COLORS = [
+  "bg-[#e0e7ff] text-[#3730a3]", // indigo
+  "bg-[#d1fae5] text-[#065f46]", // emerald
+  "bg-[#fce7f3] text-[#9d174d]", // pink
+  "bg-[#fef3c7] text-[#92400e]", // amber
+  "bg-[#e0f2fe] text-[#075985]", // sky
+  "bg-[#f3e8ff] text-[#6b21a8]", // purple
+  "bg-[#ffedd5] text-[#9a3412]", // orange
+  "bg-[#ccfbf1] text-[#134e4a]", // teal
+];
+
+function getTagColor(tag: string): string {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
+}
 
 /** Build a list of { alias, memberId } sorted by alias length descending (greedy match). */
 function buildAliasIndex(members: { id: string; authorAliases: string }[]) {
@@ -17,20 +40,13 @@ function buildAliasIndex(members: { id: string; authorAliases: string }[]) {
       if (a.trim()) entries.push({ alias: a.trim(), memberId: m.id });
     }
   }
-  // Longer aliases first for greedy matching
   entries.sort((a, b) => b.alias.length - a.alias.length);
   return entries;
 }
 
-/**
- * Highlight lab member names in an authors string.
- * Returns an array of React nodes (plain strings + <strong> elements).
- * Uses greedy first-match: once a position is matched by a longer alias, shorter aliases skip it.
- */
 function highlightAuthors(authors: string, aliasIndex: { alias: string; memberId: string }[]) {
   if (aliasIndex.length === 0) return [authors];
 
-  // Find all matches with their positions
   const matches: { start: number; end: number; memberId: string }[] = [];
   const authorsLower = authors.toLowerCase();
 
@@ -41,7 +57,6 @@ function highlightAuthors(authors: string, aliasIndex: { alias: string; memberId
       const idx = authorsLower.indexOf(aliasLower, searchFrom);
       if (idx === -1) break;
       const end = idx + alias.length;
-      // Check if this range overlaps with any existing match
       const overlaps = matches.some((m) => idx < m.end && end > m.start);
       if (!overlaps) {
         matches.push({ start: idx, end, memberId });
@@ -51,8 +66,6 @@ function highlightAuthors(authors: string, aliasIndex: { alias: string; memberId
   }
 
   if (matches.length === 0) return [authors];
-
-  // Sort by start position
   matches.sort((a, b) => a.start - b.start);
 
   const result: React.ReactNode[] = [];
@@ -63,9 +76,9 @@ function highlightAuthors(authors: string, aliasIndex: { alias: string; memberId
       result.push(authors.slice(cursor, match.start));
     }
     result.push(
-      <strong key={`${match.start}-${match.memberId}`} className="text-foreground font-semibold">
+      <span key={`${match.start}-${match.memberId}`} className="font-bold text-on-surface">
         {authors.slice(match.start, match.end)}
-      </strong>
+      </span>
     );
     cursor = match.end;
   }
@@ -102,37 +115,77 @@ export default async function PublicationsPage() {
     .sort((a, b) => b - a);
 
   return (
-    <>
-      <PageHeader title="Publications" subtitle="논문 목록" />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex gap-8 items-start">
-          {/* Sticky side navigation — lives inside the flex container so it cannot escape into header/footer */}
-          <YearNav years={years} />
+    <div className="pt-24 min-h-screen">
+      {/* Editorial Header */}
+      <header className="max-w-7xl mx-auto px-8 pt-8 pb-12 mb-24">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-outline-variant pb-12">
+          <div className="max-w-2xl">
+            <span className="font-headline text-tertiary-container font-bold tracking-widest uppercase text-xs mb-4 block">
+              Archive
+            </span>
+            <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-primary tracking-tighter leading-tight mb-6">
+              Scientific{" "}
+              <span className="text-on-tertiary-container italic font-body-text font-light">
+                Contributions
+              </span>
+            </h1>
+            <p className="font-body-text text-xl text-on-surface-variant leading-relaxed italic">
+              An indexed record of our laboratory&apos;s peer-reviewed journals, conference proceedings, and technical manuscripts.
+            </p>
+          </div>
+        </div>
+      </header>
 
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            {years.length === 0 ? (
-              <p className="text-center text-muted-foreground">등록된 논문이 없습니다.</p>
-            ) : (
-              years.map((year) => (
-                <div key={year} data-year={year} className="mb-12 scroll-mt-24">
-                  <h2 className="text-2xl font-bold mb-2">{year}</h2>
-                  <Separator className="mb-6" />
-                  <div className="space-y-6">
-                    {grouped[year].map((pub) => (
-                      <div key={pub.id} className="group">
-                        {pub.featured && (
-                          <Badge variant="outline" className="mb-1 border-yellow-300 text-yellow-700 bg-yellow-50">
-                            Featured
-                          </Badge>
-                        )}
-                        <h3 className="font-semibold text-lg leading-snug">
+      {/* Content Grid */}
+      <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Sticky Year Sidebar */}
+        <aside className="lg:col-span-2 hidden lg:block">
+          <YearNav years={years} />
+        </aside>
+
+        {/* Main Listing */}
+        <section className="lg:col-span-10 space-y-24">
+          {years.length === 0 ? (
+            <p className="text-center text-on-surface-variant py-16 font-headline">
+              등록된 논문이 없습니다.
+            </p>
+          ) : (
+            years.map((year) => (
+              <div key={year} data-year={year} className="scroll-mt-32">
+                {/* Year Header */}
+                <div className="flex items-center gap-4 mb-10">
+                  <h2 className="font-headline text-4xl font-extrabold text-primary">{year}</h2>
+                  <div className="h-px flex-grow bg-outline-variant opacity-30" />
+                  <span className="font-headline text-xs font-bold text-outline uppercase tracking-widest">
+                    {grouped[year].length} Publication{grouped[year].length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+
+                {/* Publication Items */}
+                <div className="space-y-12">
+                  {grouped[year].map((pub) => (
+                    <article
+                      key={pub.id}
+                      className="group relative p-8 border-l-4 border-secondary-fixed transition-all duration-300"
+                    >
+                      <div className="flex flex-col gap-4">
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                          {parseTags(pub.tags).map((tag, i) => (
+                            <span key={i} className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full font-headline ${getTagColor(tag)}`}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="font-body-text text-2xl font-semibold text-primary mb-1 leading-snug">
                           {pub.url ? (
                             <SafeLink
                               href={pub.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-primary transition-colors"
+                              className="hover:text-on-tertiary-container transition-colors"
                             >
                               {pub.title}
                             </SafeLink>
@@ -140,41 +193,73 @@ export default async function PublicationsPage() {
                             <span>{pub.title}</span>
                           )}
                         </h3>
-                        <p className="text-muted-foreground text-sm mt-1">
+
+                        {/* Authors */}
+                        <p className="font-headline text-sm text-on-surface-variant">
                           {highlightAuthors(pub.authors, aliasIndex)}
                         </p>
-                        <p className="text-muted-foreground/70 text-sm italic">{pub.venue}</p>
-                        <div className="flex gap-3 mt-2">
+
+                        {/* Venue */}
+                        <p className="font-body-text italic text-on-surface-variant">
+                          {pub.venue}
+                        </p>
+
+                        {/* Action Links */}
+                        <div className="flex flex-wrap gap-6 items-center">
                           {pub.pdfUrl && (
-                            <SafeLink href={pub.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                            <SafeLink
+                              href={pub.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 font-headline text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-transparent hover:border-tertiary-fixed transition-all"
+                            >
+                              <span className="material-symbols-outlined text-lg">picture_as_pdf</span>
                               PDF
                             </SafeLink>
                           )}
                           {pub.doiUrl && (
-                            <SafeLink href={pub.doiUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                            <SafeLink
+                              href={pub.doiUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 font-headline text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-transparent hover:border-tertiary-fixed transition-all"
+                            >
+                              <span className="material-symbols-outlined text-lg">format_quote</span>
                               DOI
                             </SafeLink>
                           )}
                           {pub.codeUrl && (
-                            <SafeLink href={pub.codeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                            <SafeLink
+                              href={pub.codeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 font-headline text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-transparent hover:border-tertiary-fixed transition-all"
+                            >
+                              <span className="material-symbols-outlined text-lg">terminal</span>
                               Code
                             </SafeLink>
                           )}
                           {pub.videoUrl && (
-                            <SafeLink href={pub.videoUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primary hover:underline">
+                            <SafeLink
+                              href={pub.videoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 font-headline text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-transparent hover:border-tertiary-fixed transition-all"
+                            >
+                              <span className="material-symbols-outlined text-lg">play_circle</span>
                               Video
                             </SafeLink>
                           )}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </article>
+                  ))}
                 </div>
-              ))
-            )}
-          </div>
-        </div>
+              </div>
+            ))
+          )}
+        </section>
       </div>
-    </>
+    </div>
   );
 }

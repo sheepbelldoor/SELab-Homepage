@@ -1,37 +1,50 @@
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-white text-lg font-bold mb-3">SELab</h3>
-            <p className="text-sm leading-relaxed">
-              Software Engineering Laboratory
-            </p>
+    <footer className="bg-surface-container-low w-full mt-20">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-8 px-8 py-12 max-w-7xl mx-auto">
+        {/* Left: Lab Info */}
+        <div className="max-w-md">
+          <div className="font-headline font-bold text-on-surface text-xl mb-4">
+            Software Engineering Laboratory
           </div>
-          <div>
-            <h4 className="text-white font-semibold mb-3">Quick Links</h4>
-            <div className="space-y-2 text-sm">
-              <Link href="/people" className="block hover:text-white transition-colors">People</Link>
-              <Link href="/publications" className="block hover:text-white transition-colors">Publications</Link>
-              <Link href="/contact" className="block hover:text-white transition-colors">Contact</Link>
-            </div>
-          </div>
-          <div>
-            <h4 className="text-white font-semibold mb-3">Contact</h4>
-            <div className="space-y-2 text-sm">
-              <p>yunhokim@hanyang.ac.kr</p>
-              <p>한양대학교 ITBT 614호</p>
-            </div>
+          <p className="font-body-text italic text-lg text-on-surface leading-relaxed mb-6">
+            &ldquo;Building reliable software through rigorous engineering and innovative research.&rdquo;
+          </p>
+          <div className="font-label-text text-sm text-outline">
+            &copy; {new Date().getFullYear()} SELab, Hanyang University. All rights reserved.
           </div>
         </div>
-        <Separator className="my-8 bg-gray-800" />
-        <p className="text-center text-sm">
-          &copy; {new Date().getFullYear()} SELab. All rights reserved.
-        </p>
+
+        {/* Right: Link Columns */}
+        <div className="grid grid-cols-2 gap-12">
+          <div className="flex flex-col gap-4">
+            <span className="font-headline font-bold text-sm uppercase tracking-widest text-on-surface">
+              Lab
+            </span>
+            <Link href="/research" className="font-label-text text-outline hover:text-tertiary-fixed-dim transition-colors">
+              Research
+            </Link>
+            <Link href="/people" className="font-label-text text-outline hover:text-tertiary-fixed-dim transition-colors">
+              People
+            </Link>
+            <Link href="/news" className="font-label-text text-outline hover:text-tertiary-fixed-dim transition-colors">
+              News
+            </Link>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="font-headline font-bold text-sm uppercase tracking-widest text-on-surface">
+              Resources
+            </span>
+            <Link href="/publications" className="font-label-text text-outline hover:text-tertiary-fixed-dim transition-colors">
+              Publications
+            </Link>
+            <Link href="/contact" className="font-label-text text-outline hover:text-tertiary-fixed-dim transition-colors">
+              Contact
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );

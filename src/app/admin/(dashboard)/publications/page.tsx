@@ -25,7 +25,7 @@ interface Publication {
   authors: string;
   venue: string;
   year: number;
-  featured: boolean;
+  tags: string;
 }
 
 export default function AdminPublicationsPage() {
@@ -199,7 +199,7 @@ export default function AdminPublicationsPage() {
               <TableRow>
                 <TableHead>논문</TableHead>
                 <TableHead className="w-16">연도</TableHead>
-                <TableHead className="w-16">대표</TableHead>
+                <TableHead className="w-32">태그</TableHead>
                 <TableHead className="w-24">관리</TableHead>
               </TableRow>
             </TableHeader>
@@ -216,9 +216,16 @@ export default function AdminPublicationsPage() {
                   </TableCell>
                   <TableCell className="text-muted-foreground whitespace-nowrap">{pub.year}</TableCell>
                   <TableCell>
-                    {pub.featured && (
-                      <Badge variant="outline" className="border-yellow-300 text-yellow-700 bg-yellow-50 text-xs">대표</Badge>
-                    )}
+                    <div className="flex flex-wrap gap-1">
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(pub.tags);
+                          return (Array.isArray(parsed) ? parsed : []).map((tag: string, i: number) => (
+                            <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+                          ));
+                        } catch { return null; }
+                      })()}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">

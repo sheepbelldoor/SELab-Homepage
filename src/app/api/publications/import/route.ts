@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         authors: sanitizeString(entry.authors, 2000) || "",
         venue: sanitizeString(entry.venue, 500) || "",
         year: entry.year,
-        featured: false,
+        tags: "[]",
         url: sanitizeUrl(entry.url),
         pdfUrl: sanitizeUrl(entry.pdfUrl),
         doiUrl: sanitizeUrl(entry.doi),

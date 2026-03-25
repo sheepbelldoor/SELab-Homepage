@@ -1,7 +1,6 @@
 import PageHeader from "@/components/PageHeader";
 import MemberCard from "@/components/MemberCard";
 import { prisma } from "@/lib/prisma";
-import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -28,13 +27,10 @@ export default async function PeoplePage() {
     }),
   ]);
 
-  // Match publications to members using authorAliases (greedy first-match)
   function getPublicationsForMember(member: { name: string; nameEn: string | null; authorAliases: string }) {
     let aliases: string[] = [];
     try { aliases = JSON.parse(member.authorAliases); } catch { /* ignore */ }
-    // If no aliases configured, skip matching
     if (aliases.length === 0) return [];
-    // Sort aliases by length descending for greedy first-match
     const sortedAliases = [...aliases].sort((a, b) => b.length - a.length);
     return publications.filter((pub) => {
       const authorsLower = pub.authors.toLowerCase();
@@ -52,15 +48,17 @@ export default async function PeoplePage() {
 
   return (
     <>
-      <PageHeader title="People" subtitle="구성원 소개" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <PageHeader title="People" subtitle="구성원 소개" overline="Our Team" />
+      <div className="max-w-7xl mx-auto px-8 pb-16">
         {grouped.length === 0 && (
-          <p className="text-center text-muted-foreground">등록된 구성원이 없습니다.</p>
+          <p className="text-center text-on-surface-variant font-headline">등록된 구성원이 없습니다.</p>
         )}
         {grouped.map((group) => (
           <div key={group.role} className="mb-16">
-            <h2 className="text-2xl font-bold mb-2">{group.label}</h2>
-            <Separator className="mb-8" />
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="font-headline text-2xl font-extrabold text-primary">{group.label}</h2>
+              <div className="h-px flex-grow bg-outline-variant opacity-30" />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {group.members.map((member) => {
                 const memberPubs = getPublicationsForMember(member);

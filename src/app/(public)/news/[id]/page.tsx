@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/lib/button-variants";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -19,27 +15,33 @@ export default async function NewsDetailPage({
   if (!post || !post.published) notFound();
 
   return (
-    <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <article className="max-w-3xl mx-auto px-8 pt-32 pb-16">
+      {/* Back link */}
       <Link
         href="/news"
-        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "mb-8 inline-flex items-center gap-1")}
+        className="font-headline text-sm font-bold text-primary flex items-center gap-1 mb-8 hover:text-on-tertiary-container transition-colors"
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
+        <span className="material-symbols-outlined text-sm">arrow_back</span>
         목록으로
       </Link>
 
-      <header className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <Badge variant={post.category === "notice" ? "destructive" : "secondary"}>
+      {/* Header */}
+      <header className="mb-10">
+        <div className="flex items-center gap-3 mb-4">
+          <span
+            className={`px-3 py-1 text-[10px] font-bold font-headline rounded-full uppercase tracking-wider ${
+              post.category === "notice"
+                ? "bg-[#fce7f3] text-[#9d174d]"
+                : "bg-[#e0e7ff] text-[#3730a3]"
+            }`}
+          >
             {post.category === "notice" ? "Notice" : "News"}
-          </Badge>
+          </span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+        <h1 className="font-headline text-3xl md:text-5xl font-extrabold tracking-tighter text-primary leading-tight mb-4">
           {post.title}
         </h1>
-        <time className="text-sm text-muted-foreground">
+        <time className="font-headline text-xs tracking-widest uppercase text-on-surface-variant">
           {post.createdAt.toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
@@ -48,8 +50,9 @@ export default async function NewsDetailPage({
         </time>
       </header>
 
+      {/* Thumbnail */}
       {post.thumbnail && (
-        <div className="mb-10 rounded-xl overflow-hidden border">
+        <div className="mb-10 rounded-xl overflow-hidden">
           <img
             src={post.thumbnail}
             alt={post.title}
@@ -58,9 +61,8 @@ export default async function NewsDetailPage({
         </div>
       )}
 
-      <Separator className="mb-10" />
-
-      <div className="text-foreground/80 text-[1.05rem] leading-[1.85] whitespace-pre-wrap">
+      {/* Content */}
+      <div className="font-body-text text-on-surface text-lg leading-[1.85] whitespace-pre-wrap">
         {post.content}
       </div>
     </article>
