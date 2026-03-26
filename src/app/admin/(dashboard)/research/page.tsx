@@ -10,7 +10,9 @@ import { Card, CardContent } from "@/components/ui/card";
 interface Research {
   id: string;
   title: string;
+  titleEn: string;
   description: string;
+  descriptionEn: string;
   sortOrder: number;
 }
 
@@ -18,7 +20,7 @@ export default function AdminResearchPage() {
   const [areas, setAreas] = useState<Research[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null);
-  const [form, setForm] = useState({ title: "", description: "", sortOrder: 0 });
+  const [form, setForm] = useState({ title: "", titleEn: "", description: "", descriptionEn: "", sortOrder: 0 });
 
   function loadData() {
     fetch("/api/research")
@@ -42,7 +44,7 @@ export default function AdminResearchPage() {
 
     if (res.ok) {
       setEditing(null);
-      setForm({ title: "", description: "", sortOrder: 0 });
+      setForm({ title: "", titleEn: "", description: "", descriptionEn: "", sortOrder: 0 });
       loadData();
     }
   }
@@ -55,7 +57,7 @@ export default function AdminResearchPage() {
 
   function startEdit(area: Research) {
     setEditing(area.id);
-    setForm({ title: area.title, description: area.description, sortOrder: area.sortOrder });
+    setForm({ title: area.title, titleEn: area.titleEn || "", description: area.description, descriptionEn: area.descriptionEn || "", sortOrder: area.sortOrder });
   }
 
   return (
@@ -65,7 +67,7 @@ export default function AdminResearchPage() {
         <Button
           onClick={() => {
             setEditing("new");
-            setForm({ title: "", description: "", sortOrder: 0 });
+            setForm({ title: "", titleEn: "", description: "", descriptionEn: "", sortOrder: 0 });
           }}
         >
           새 연구 분야
@@ -77,13 +79,25 @@ export default function AdminResearchPage() {
           <CardContent className="pt-6">
             <h2 className="font-semibold mb-4">{editing === "new" ? "새 연구 분야" : "수정"}</h2>
             <div className="space-y-4 max-w-xl">
-              <div className="space-y-2">
-                <Label>제목</Label>
-                <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>제목 (한국어)</Label>
+                  <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Title (English)</Label>
+                  <Input value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>설명</Label>
-                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>설명 (한국어)</Label>
+                  <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Description (English)</Label>
+                  <Textarea value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} rows={4} />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>정렬 순서</Label>

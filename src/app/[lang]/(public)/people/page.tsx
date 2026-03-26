@@ -1,22 +1,22 @@
 import PageHeader from "@/components/PageHeader";
 import MemberCard from "@/components/MemberCard";
 import { prisma } from "@/lib/prisma";
+import { parseLang } from "@/lib/i18n";
+import { getDictionary } from "@/lib/dictionaries";
 
 export const dynamic = "force-dynamic";
 
-const roleLabels: Record<string, string> = {
-  professor: "Professor",
-  postdoc: "Postdoctoral Researcher",
-  msphd: "MS/PhD Integrated",
-  phd: "PhD Students",
-  ms: "MS Students",
-  intern: "Undergraduate / Intern",
-  alumni: "Alumni",
-};
-
 const roleOrder = ["professor", "postdoc", "msphd", "phd", "ms", "intern", "alumni"];
 
-export default async function PeoplePage() {
+export default async function PeoplePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang: rawLang } = await params;
+  const lang = parseLang(rawLang);
+  const d = getDictionary(lang);
+
   const [members, publications] = await Promise.all([
     prisma.member.findMany({
       orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
@@ -41,17 +41,17 @@ export default async function PeoplePage() {
   const grouped = roleOrder
     .map((role) => ({
       role,
-      label: roleLabels[role] || role,
+      label: d.roles[role] || role,
       members: members.filter((m) => m.role === role),
     }))
     .filter((g) => g.members.length > 0);
 
   return (
     <>
-      <PageHeader title="People" subtitle="구성원 소개" overline="Our Team" />
+      <PageHeader title={d.people.title} subtitle={d.people.subtitle} overline={d.people.overline} />
       <div className="max-w-7xl mx-auto px-8 pb-16">
         {grouped.length === 0 && (
-          <p className="text-center text-on-surface-variant font-headline">등록된 구성원이 없습니다.</p>
+          <p className="text-center text-on-surface-variant font-headline">{d.people.empty}</p>
         )}
         {grouped.map((group) => (
           <div key={group.role} className="mb-16">
@@ -65,6 +65,7 @@ export default async function PeoplePage() {
                 return (
                   <MemberCard
                     key={member.id}
+                    lang={lang}
                     member={{
                       id: member.id,
                       name: member.name,
@@ -72,14 +73,18 @@ export default async function PeoplePage() {
                       photo: member.photo,
                       role: member.role,
                       bio: member.bio,
+                      bioEn: member.bioEn,
                       interest: member.interest,
+                      interestEn: member.interestEn,
                       email: member.email,
                       homepage: member.homepage,
                       github: member.github,
                       scholar: member.scholar,
                       cvUrl: member.cvUrl,
                       education: (() => { try { return JSON.parse(member.education); } catch { return []; } })(),
+                      educationEn: (() => { try { return JSON.parse(member.educationEn); } catch { return []; } })(),
                       awards: (() => { try { return JSON.parse(member.awards); } catch { return []; } })(),
+                      awardsEn: (() => { try { return JSON.parse(member.awardsEn); } catch { return []; } })(),
                       publications: memberPubs.map((p) => ({
                         id: p.id,
                         title: p.title,

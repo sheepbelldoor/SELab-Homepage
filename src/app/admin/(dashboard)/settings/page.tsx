@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminSettingsPage() {
   const [config, setConfig] = useState<Record<string, string> | null>(null);
@@ -98,20 +99,74 @@ export default function AdminSettingsPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveConfig} className="max-w-2xl space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="labName">연구실 이름</Label>
-                <Input id="labName" name="labName" defaultValue={config.labName || ""} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tagline">한 줄 소개</Label>
-                <Input id="tagline" name="tagline" defaultValue={config.tagline || ""} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">연구실 설명</Label>
-              <Textarea id="description" name="description" rows={3} defaultValue={config.description || ""} />
-            </div>
+            <Tabs defaultValue="ko">
+              <TabsList>
+                <TabsTrigger value="ko">한국어</TabsTrigger>
+                <TabsTrigger value="en">English</TabsTrigger>
+              </TabsList>
+              <TabsContent value="ko" className="space-y-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="labName">연구실 이름</Label>
+                    <Input id="labName" name="labName" defaultValue={config.labName || ""} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tagline">한 줄 소개</Label>
+                    <Input id="tagline" name="tagline" defaultValue={config.tagline || ""} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">연구실 설명</Label>
+                  <Textarea id="description" name="description" rows={3} defaultValue={config.description || ""} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="joinUsContent">Join Us 내용</Label>
+                  <Textarea id="joinUsContent" name="joinUsContent" rows={5} defaultValue={config.joinUsContent || ""} />
+                </div>
+                <h3 className="font-semibold pt-2">연락처 / 위치 (한국어)</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="address">주소</Label>
+                    <Input id="address" name="address" defaultValue={config.address || ""} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="building">건물/호실</Label>
+                    <Input id="building" name="building" defaultValue={config.building || ""} />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="en" className="space-y-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="labNameEn">Lab Name</Label>
+                    <Input id="labNameEn" name="labNameEn" defaultValue={config.labNameEn || ""} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="taglineEn">Tagline</Label>
+                    <Input id="taglineEn" name="taglineEn" defaultValue={config.taglineEn || ""} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="descriptionEn">Description</Label>
+                  <Textarea id="descriptionEn" name="descriptionEn" rows={3} defaultValue={config.descriptionEn || ""} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="joinUsContentEn">Join Us Content</Label>
+                  <Textarea id="joinUsContentEn" name="joinUsContentEn" rows={5} defaultValue={config.joinUsContentEn || ""} />
+                </div>
+                <h3 className="font-semibold pt-2">Contact / Location (English)</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="addressEn">Address</Label>
+                    <Input id="addressEn" name="addressEn" defaultValue={config.addressEn || ""} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="buildingEn">Building / Room</Label>
+                    <Input id="buildingEn" name="buildingEn" defaultValue={config.buildingEn || ""} />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
 
             <ImageUpload
               value={bannerUrl}
@@ -119,24 +174,9 @@ export default function AdminSettingsPage() {
               label="메인 배너 이미지"
             />
 
-            <div className="space-y-2">
-              <Label htmlFor="joinUsContent">Join Us 내용</Label>
-              <Textarea id="joinUsContent" name="joinUsContent" rows={5} defaultValue={config.joinUsContent || ""} />
-            </div>
-
             <Separator />
 
-            <h3 className="font-semibold">연락처 / 위치</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="address">주소</Label>
-                <Input id="address" name="address" defaultValue={config.address || ""} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="building">건물/호실</Label>
-                <Input id="building" name="building" defaultValue={config.building || ""} />
-              </div>
-            </div>
+            <h3 className="font-semibold">공통 (언어 무관)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="email">이메일</Label>

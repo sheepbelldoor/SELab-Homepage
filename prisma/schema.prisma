@@ -18,7 +18,9 @@ model Admin {
 model Post {
   id          String   @id @default(cuid())
   title       String
+  titleEn     String   @default("")
   content     String
+  contentEn   String   @default("")
   category    String   @default("news") // "news" | "notice"
   published   Boolean  @default(false)
   pinned      Boolean  @default(false)
@@ -34,7 +36,9 @@ model Member {
   photo       String?
   role        String   // "professor" | "postdoc" | "msphd" | "phd" | "ms" | "intern" | "alumni"
   bio         String?
+  bioEn       String?
   interest    String?
+  interestEn  String?
   email       String?
   homepage    String?
   github      String?
@@ -42,7 +46,9 @@ model Member {
   cvUrl       String?
   authorAliases String @default("[]") // JSON array of name variants for publication matching
   education   String   @default("[]") // JSON array of education entries
+  educationEn String   @default("[]") // JSON array of education entries (English)
   awards      String   @default("[]") // JSON array of honors & awards entries
+  awardsEn    String   @default("[]") // JSON array of honors & awards entries (English)
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -66,40 +72,51 @@ model Publication {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  participants String?
-  status      String   @default("ongoing") // "ongoing" | "completed"
-  featured    Boolean  @default(false)
-  imageUrl    String?
-  demoUrl     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  title         String
+  titleEn       String   @default("")
+  description   String
+  descriptionEn String   @default("")
+  participants  String?
+  status        String   @default("ongoing") // "ongoing" | "completed"
+  featured      Boolean  @default(false)
+  imageUrl      String?
+  demoUrl       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Research {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  icon        String?
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  title         String
+  titleEn       String   @default("")
+  description   String
+  descriptionEn String   @default("")
+  icon          String?
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model SiteConfig {
-  id          String   @id @default("main")
-  labName     String   @default("SELab")
-  tagline     String   @default("Software Engineering Laboratory")
-  description String   @default("")
-  bannerUrl   String?
-  address     String   @default("")
-  building    String   @default("")
-  email       String   @default("")
-  phone       String   @default("")
-  mapUrl      String?
-  joinUsContent String @default("")
-  aboutContent  String @default("")
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default("main")
+  labName         String   @default("SELab")
+  labNameEn       String   @default("")
+  tagline         String   @default("Software Engineering Laboratory")
+  taglineEn       String   @default("")
+  description     String   @default("")
+  descriptionEn   String   @default("")
+  bannerUrl       String?
+  address         String   @default("")
+  addressEn       String   @default("")
+  building        String   @default("")
+  buildingEn      String   @default("")
+  email           String   @default("")
+  phone           String   @default("")
+  mapUrl          String?
+  joinUsContent   String   @default("")
+  joinUsContentEn String   @default("")
+  aboutContent    String   @default("")
+  aboutContentEn  String   @default("")
+  updatedAt       DateTime @updatedAt
 }

@@ -23,7 +23,9 @@ export async function POST(req: NextRequest) {
   const area = await prisma.research.create({
     data: {
       title,
+      titleEn: sanitizeString(body.titleEn, 200) || "",
       description: sanitizeString(body.description, 5000) || "",
+      descriptionEn: sanitizeString(body.descriptionEn, 5000) || "",
       icon: sanitizeString(body.icon, 100),
       sortOrder: sanitizeInt(body.sortOrder, 0),
     },

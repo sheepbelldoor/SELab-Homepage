@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import type { Lang } from "@/lib/i18n";
 
 interface Publication {
   id: string;
@@ -26,30 +27,50 @@ interface Member {
   photo: string | null;
   role: string;
   bio: string | null;
+  bioEn?: string | null;
   interest: string | null;
+  interestEn?: string | null;
   email: string | null;
   homepage: string | null;
   github: string | null;
   scholar: string | null;
   cvUrl: string | null;
   education?: string[];
+  educationEn?: string[];
   awards?: string[];
+  awardsEn?: string[];
   publications?: Publication[];
 }
 
-const roleLabels: Record<string, string> = {
-  professor: "Professor",
-  postdoc: "Postdoctoral Researcher",
-  msphd: "MS/PhD Integrated",
-  phd: "PhD Student",
-  ms: "MS Student",
-  intern: "Undergraduate / Intern",
-  alumni: "Alumni",
+const roleLabels: Record<string, Record<Lang, string>> = {
+  professor: { ko: "Professor", en: "Professor" },
+  postdoc: { ko: "Postdoctoral Researcher", en: "Postdoctoral Researcher" },
+  msphd: { ko: "MS/PhD Integrated", en: "MS/PhD Integrated" },
+  phd: { ko: "PhD Student", en: "PhD Student" },
+  ms: { ko: "MS Student", en: "MS Student" },
+  intern: { ko: "Undergraduate / Intern", en: "Undergraduate / Intern" },
+  alumni: { ko: "Alumni", en: "Alumni" },
 };
 
-export default function MemberCard({ member }: { member: Member }) {
+function pick(ko: string | null | undefined, en: string | null | undefined, lang: Lang): string {
+  if (lang === "en" && en?.trim()) return en;
+  return ko || "";
+}
+
+function pickList(ko: string[] | undefined, en: string[] | undefined, lang: Lang): string[] {
+  if (lang === "en" && en && en.length > 0) return en;
+  return ko || [];
+}
+
+export default function MemberCard({ member, lang }: { member: Member; lang: Lang }) {
   const [open, setOpen] = useState(false);
 
+  const displayName = lang === "en" && member.nameEn ? member.nameEn : member.name;
+  const secondaryName = lang === "en" ? member.name : member.nameEn;
+  const bio = pick(member.bio, member.bioEn, lang);
+  const interest = pick(member.interest, member.interestEn, lang);
+  const education = pickList(member.education, member.educationEn, lang);
+  const awards = pickList(member.awards, member.awardsEn, lang);
   const hasLinks = member.homepage || member.github || member.scholar || member.cvUrl;
 
   return (
@@ -61,18 +82,18 @@ export default function MemberCard({ member }: { member: Member }) {
       >
         <div className="flex flex-col items-center text-center">
           <Avatar className="w-24 h-24 mb-4">
-            <AvatarImage src={member.photo || undefined} alt={member.name} />
+            <AvatarImage src={member.photo || undefined} alt={displayName} />
             <AvatarFallback className="text-2xl bg-surface-container-high font-headline">
-              {member.name.charAt(0)}
+              {displayName.charAt(0)}
             </AvatarFallback>
           </Avatar>
-          <h3 className="font-headline font-semibold text-lg text-on-surface">{member.name}</h3>
-          {member.nameEn && (
-            <p className="font-headline text-sm text-on-surface-variant">{member.nameEn}</p>
+          <h3 className="font-headline font-semibold text-lg text-on-surface">{displayName}</h3>
+          {secondaryName && (
+            <p className="font-headline text-sm text-on-surface-variant">{secondaryName}</p>
           )}
-          {member.interest && (
+          {interest && (
             <p className="font-headline text-sm text-outline mt-2">
-              {member.interest}
+              {interest}
             </p>
           )}
           {member.email && (
@@ -103,20 +124,20 @@ export default function MemberCard({ member }: { member: Member }) {
           <DialogHeader>
             <div className="flex items-start gap-5">
               <Avatar className="w-24 h-24 flex-shrink-0">
-                <AvatarImage src={member.photo || undefined} alt={member.name} />
+                <AvatarImage src={member.photo || undefined} alt={displayName} />
                 <AvatarFallback className="text-2xl bg-surface-container-high font-headline">
-                  {member.name.charAt(0)}
+                  {displayName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="text-left min-w-0">
                 <DialogTitle className="font-headline text-xl leading-tight text-on-surface">
-                  {member.name}
+                  {displayName}
                 </DialogTitle>
-                {member.nameEn && (
-                  <p className="font-headline text-sm text-on-surface-variant mt-0.5">{member.nameEn}</p>
+                {secondaryName && (
+                  <p className="font-headline text-sm text-on-surface-variant mt-0.5">{secondaryName}</p>
                 )}
                 <span className="inline-block mt-2 px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-md text-xs font-headline font-bold">
-                  {roleLabels[member.role] || member.role}
+                  {roleLabels[member.role]?.[lang] || member.role}
                 </span>
                 {member.email && (
                   <p className="font-headline text-sm text-on-surface-variant mt-2">{member.email}</p>
@@ -128,31 +149,31 @@ export default function MemberCard({ member }: { member: Member }) {
           <div className="h-px bg-outline-variant/20 my-2" />
 
           <div className="space-y-5">
-            {member.bio && (
+            {bio && (
               <section>
                 <DialogDescription className="font-headline font-bold text-on-surface text-xs uppercase tracking-wider mb-1.5">
                   About
                 </DialogDescription>
-                <p className="font-body-text text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed">{member.bio}</p>
+                <p className="font-body-text text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed">{bio}</p>
               </section>
             )}
 
-            {member.interest && (
+            {interest && (
               <section>
                 <DialogDescription className="font-headline font-bold text-on-surface text-xs uppercase tracking-wider mb-1.5">
                   Research Interests
                 </DialogDescription>
-                <p className="font-headline text-sm text-on-surface-variant">{member.interest}</p>
+                <p className="font-headline text-sm text-on-surface-variant">{interest}</p>
               </section>
             )}
 
-            {member.education && member.education.length > 0 && (
+            {education.length > 0 && (
               <section>
                 <DialogDescription className="font-headline font-bold text-on-surface text-xs uppercase tracking-wider mb-1.5">
                   Education
                 </DialogDescription>
                 <ul className="space-y-1">
-                  {member.education.map((item, i) => (
+                  {education.map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm">
                       <span className="text-outline mt-1.5 w-1.5 h-1.5 rounded-full bg-outline/40 flex-shrink-0" />
                       <span className="font-headline text-on-surface-variant">{item}</span>
@@ -162,13 +183,13 @@ export default function MemberCard({ member }: { member: Member }) {
               </section>
             )}
 
-            {member.awards && member.awards.length > 0 && (
+            {awards.length > 0 && (
               <section>
                 <DialogDescription className="font-headline font-bold text-on-surface text-xs uppercase tracking-wider mb-1.5">
                   Honors & Awards
                 </DialogDescription>
                 <ul className="space-y-1">
-                  {member.awards.map((item, i) => (
+                  {awards.map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm">
                       <span className="text-outline mt-1.5 w-1.5 h-1.5 rounded-full bg-outline/40 flex-shrink-0" />
                       <span className="font-headline text-on-surface-variant">{item}</span>

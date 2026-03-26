@@ -1,33 +1,42 @@
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 import { sanitizeMapUrl } from "@/lib/validate";
+import { parseLang, t } from "@/lib/i18n";
+import { getDictionary } from "@/lib/dictionaries";
 
 export const dynamic = "force-dynamic";
 
-export default async function ContactPage() {
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang: rawLang } = await params;
+  const lang = parseLang(rawLang);
+  const d = getDictionary(lang);
+
   const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
   const safeMapUrl = sanitizeMapUrl(config?.mapUrl);
 
   return (
     <>
-      <PageHeader title="Contact" subtitle="연락처 및 지원 안내" overline="Get in Touch" />
+      <PageHeader title={d.contact.title} subtitle={d.contact.subtitle} overline={d.contact.overline} />
       <div className="max-w-4xl mx-auto px-8 pb-16">
         {/* Join Us */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
-            <h2 className="font-headline text-2xl font-extrabold text-primary">Join Us</h2>
+            <h2 className="font-headline text-2xl font-extrabold text-primary">{d.contact.joinUs}</h2>
             <div className="h-px flex-grow bg-outline-variant opacity-30" />
           </div>
           <div className="font-body-text whitespace-pre-wrap text-on-surface-variant leading-relaxed text-lg">
-            {config?.joinUsContent ||
-              "모집 관련 내용이 아직 등록되지 않았습니다."}
+            {(config && t(config, "joinUsContent", lang)) || d.contact.noJoinUs}
           </div>
         </section>
 
         {/* Contact Info */}
         <section>
           <div className="flex items-center gap-4 mb-8">
-            <h2 className="font-headline text-2xl font-extrabold text-primary">Contact Info</h2>
+            <h2 className="font-headline text-2xl font-extrabold text-primary">{d.contact.contactInfo}</h2>
             <div className="h-px flex-grow bg-outline-variant opacity-30" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -36,11 +45,11 @@ export default async function ContactPage() {
               <div className="bg-surface-container-low rounded-[6px] p-8">
                 <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-primary mb-4">
                   <span className="material-symbols-outlined text-lg align-middle mr-2">location_on</span>
-                  주소
+                  {d.contact.address}
                 </h3>
                 <div className="font-body-text text-on-surface-variant space-y-1">
-                  {config?.address && <p>{config.address}</p>}
-                  {config?.building && <p>{config.building}</p>}
+                  {config?.address && <p>{t(config, "address", lang)}</p>}
+                  {config?.building && <p>{t(config, "building", lang)}</p>}
                 </div>
               </div>
 
@@ -48,7 +57,7 @@ export default async function ContactPage() {
               <div className="bg-surface-container-low rounded-[6px] p-8">
                 <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-primary mb-4">
                   <span className="material-symbols-outlined text-lg align-middle mr-2">mail</span>
-                  연락처
+                  {d.contact.contactDetails}
                 </h3>
                 <div className="font-body-text text-on-surface-variant space-y-2">
                   {config?.email && (
@@ -83,7 +92,7 @@ export default async function ContactPage() {
               ) : (
                 <div className="text-center text-outline p-8">
                   <span className="material-symbols-outlined text-5xl mb-3 block">map</span>
-                  <p className="font-headline text-sm">지도가 등록되지 않았습니다.</p>
+                  <p className="font-headline text-sm">{d.contact.noMap}</p>
                 </div>
               )}
             </div>
