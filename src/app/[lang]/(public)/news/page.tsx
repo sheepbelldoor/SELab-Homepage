@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { parseLang, t } from "@/lib/i18n";
+import { getDictionary } from "@/lib/dictionaries";
 
 export const dynamic = "force-dynamic";
 
@@ -11,20 +13,26 @@ const categoryColors: Record<string, string> = {
 };
 
 export default async function NewsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ category?: string; page?: string }>;
 }) {
+  const { lang: rawLang } = await params;
+  const lang = parseLang(rawLang);
+  const d = getDictionary(lang);
+  const p = `/${lang}`;
+  const dateLang = lang === "en" ? "en-US" : "ko-KR";
+
   const { category, page } = await searchParams;
   const currentPage = Math.max(1, parseInt(page || "1", 10));
 
-  // Pinned post for hero
   const pinnedPost = await prisma.post.findFirst({
     where: { published: true, pinned: true },
     orderBy: { createdAt: "desc" },
   });
 
-  // Filter conditions
   const where = {
     published: true,
     ...(category && category !== "all" ? { category } : {}),
@@ -40,21 +48,19 @@ export default async function NewsPage({
     take: POSTS_PER_PAGE,
   });
 
-  // Category counts
   const allCount = await prisma.post.count({ where: { published: true } });
   const noticeCount = await prisma.post.count({ where: { published: true, category: "notice" } });
   const newsCount = await prisma.post.count({ where: { published: true, category: "news" } });
 
-  // Group posts by year for archive
   const allPosts = await prisma.post.findMany({
     where: { published: true },
     orderBy: { createdAt: "desc" },
     select: { createdAt: true },
   });
   const yearMap = new Map<number, Set<number>>();
-  allPosts.forEach((p) => {
-    const y = p.createdAt.getFullYear();
-    const m = p.createdAt.getMonth();
+  allPosts.forEach((post) => {
+    const y = post.createdAt.getFullYear();
+    const m = post.createdAt.getMonth();
     if (!yearMap.has(y)) yearMap.set(y, new Set());
     yearMap.get(y)!.add(m);
   });
@@ -71,7 +77,7 @@ export default async function NewsPage({
             {pinnedPost.thumbnail ? (
               <img
                 src={pinnedPost.thumbnail}
-                alt={pinnedPost.title}
+                alt={t(pinnedPost, "title", lang)}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             ) : (
@@ -79,27 +85,27 @@ export default async function NewsPage({
             )}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/40 to-transparent flex flex-col justify-center px-12 text-on-primary">
               <span className="font-headline text-xs font-bold tracking-[0.2em] uppercase mb-4 text-tertiary-fixed">
-                Latest Announcement
+                {d.news.latestAnnouncement}
               </span>
               <h1 className="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter max-w-2xl mb-6">
-                {pinnedPost.title}
+                {t(pinnedPost, "title", lang)}
               </h1>
               {pinnedPost.content && (
                 <p className="font-body-text text-xl max-w-xl mb-8 leading-relaxed opacity-90">
-                  {pinnedPost.content.substring(0, 150)}
-                  {pinnedPost.content.length > 150 ? "..." : ""}
+                  {t(pinnedPost, "content", lang).substring(0, 150)}
+                  {t(pinnedPost, "content", lang).length > 150 ? "..." : ""}
                 </p>
               )}
               <div className="flex items-center gap-4">
                 <Link
-                  href={`/news/${pinnedPost.id}`}
+                  href={`${p}/news/${pinnedPost.id}`}
                   className="bg-tertiary-fixed text-on-tertiary-fixed px-8 py-3 rounded-md font-headline font-bold text-sm flex items-center gap-2 transition-all hover:opacity-90 active:scale-95"
                 >
-                  Read More
+                  {d.news.readMore}
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </Link>
                 <span className="font-headline text-sm opacity-75">
-                  {pinnedPost.createdAt.toLocaleDateString("ko-KR")}
+                  {pinnedPost.createdAt.toLocaleDateString(dateLang)}
                 </span>
               </div>
             </div>
@@ -111,20 +117,19 @@ export default async function NewsPage({
       <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-16">
         {/* Sidebar */}
         <aside className="lg:col-span-3 space-y-12">
-          {/* Categories */}
           <div className="space-y-6">
             <h3 className="font-headline text-sm font-extrabold uppercase tracking-widest text-primary">
-              Categories
+              {d.news.categories}
             </h3>
             <div className="flex flex-wrap lg:flex-col gap-2">
               {[
-                { key: "all", label: "All Updates", count: allCount },
-                { key: "notice", label: "Notice", count: noticeCount },
-                { key: "news", label: "News", count: newsCount },
+                { key: "all", label: d.news.allUpdates, count: allCount },
+                { key: "notice", label: d.news.notice, count: noticeCount },
+                { key: "news", label: d.news.newsLabel, count: newsCount },
               ].map((cat) => (
                 <Link
                   key={cat.key}
-                  href={cat.key === "all" ? "/news" : `/news?category=${cat.key}`}
+                  href={cat.key === "all" ? `${p}/news` : `${p}/news?category=${cat.key}`}
                   className={`flex items-center justify-between px-4 py-2 rounded-lg font-headline text-sm font-semibold transition-all ${
                     activeCategory === cat.key
                       ? "bg-primary text-on-primary"
@@ -137,10 +142,9 @@ export default async function NewsPage({
             </div>
           </div>
 
-          {/* Chronological Archive */}
           <div className="space-y-6">
             <h3 className="font-headline text-sm font-extrabold uppercase tracking-widest text-primary">
-              Archive
+              {d.news.archive}
             </h3>
             <div className="space-y-2">
               {years.map((year, idx) => (
@@ -159,7 +163,7 @@ export default async function NewsPage({
                           key={month}
                           className="block py-1 text-sm font-headline text-on-surface-variant"
                         >
-                          {new Date(year, month).toLocaleDateString("ko-KR", { month: "long" })}
+                          {new Date(year, month).toLocaleDateString(dateLang, { month: "long" })}
                         </span>
                       ))}
                   </div>
@@ -173,24 +177,22 @@ export default async function NewsPage({
         <div className="lg:col-span-9">
           {posts.length === 0 ? (
             <p className="text-center text-on-surface-variant py-16 font-headline">
-              등록된 게시글이 없습니다.
+              {d.news.empty}
             </p>
           ) : (
             <div className="divide-y divide-surface-container-high">
               {posts.map((post) => (
                 <article key={post.id} className="py-8 first:pt-0 group">
                   <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12">
-                    {/* Date */}
                     <div className="md:w-32 flex-shrink-0">
                       <span className="font-headline text-xs font-bold tracking-widest uppercase text-on-surface-variant/60">
-                        {post.createdAt.toLocaleDateString("ko-KR", {
+                        {post.createdAt.toLocaleDateString(dateLang, {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                         })}
                       </span>
                     </div>
-                    {/* Content */}
                     <div className="flex-grow">
                       <div className="flex items-center gap-3 mb-3">
                         <span
@@ -198,28 +200,28 @@ export default async function NewsPage({
                             categoryColors[post.category] || categoryColors.news
                           }`}
                         >
-                          {post.category === "notice" ? "Notice" : "News"}
+                          {post.category === "notice" ? d.news.notice : d.news.newsLabel}
                         </span>
                         {post.pinned && (
                           <span className="px-2 py-0.5 bg-[#fef3c7] text-[#92400e] text-[10px] font-bold font-headline rounded uppercase">
-                            Pinned
+                            {d.news.pinned}
                           </span>
                         )}
                       </div>
                       <h2 className="font-body-text text-2xl font-semibold mb-3 text-primary leading-tight group-hover:text-on-tertiary-container transition-colors">
-                        <Link href={`/news/${post.id}`}>{post.title}</Link>
+                        <Link href={`${p}/news/${post.id}`}>{t(post, "title", lang)}</Link>
                       </h2>
                       {post.content && (
                         <p className="font-body-text text-on-surface-variant text-lg mb-4 max-w-3xl">
-                          {post.content.substring(0, 120)}
-                          {post.content.length > 120 ? "..." : ""}
+                          {t(post, "content", lang).substring(0, 120)}
+                          {t(post, "content", lang).length > 120 ? "..." : ""}
                         </p>
                       )}
                       <Link
-                        href={`/news/${post.id}`}
+                        href={`${p}/news/${post.id}`}
                         className="font-headline text-sm font-bold text-primary flex items-center gap-1 group/link hover:text-on-tertiary-container transition-colors"
                       >
-                        Read Story
+                        {d.news.readStory}
                         <span className="material-symbols-outlined text-xs transition-transform group-hover/link:translate-x-1">
                           arrow_forward
                         </span>
@@ -236,7 +238,7 @@ export default async function NewsPage({
             <div className="mt-16 flex items-center justify-center gap-4">
               {currentPage > 1 ? (
                 <Link
-                  href={`/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(currentPage - 1) })}`}
+                  href={`${p}/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(currentPage - 1) })}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"
                 >
                   <span className="material-symbols-outlined">chevron_left</span>
@@ -246,22 +248,22 @@ export default async function NewsPage({
                   <span className="material-symbols-outlined">chevron_left</span>
                 </span>
               )}
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
                 <Link
-                  key={p}
-                  href={`/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(p) })}`}
+                  key={pg}
+                  href={`${p}/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(pg) })}`}
                   className={`w-10 h-10 flex items-center justify-center rounded-full font-headline font-bold text-sm transition-colors ${
-                    p === currentPage
+                    pg === currentPage
                       ? "bg-primary text-on-primary"
                       : "hover:bg-surface-container-high"
                   }`}
                 >
-                  {p}
+                  {pg}
                 </Link>
               ))}
               {currentPage < totalPages ? (
                 <Link
-                  href={`/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(currentPage + 1) })}`}
+                  href={`${p}/news?${new URLSearchParams({ ...(category ? { category } : {}), page: String(currentPage + 1) })}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors"
                 >
                   <span className="material-symbols-outlined">chevron_right</span>

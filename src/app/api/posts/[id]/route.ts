@@ -31,7 +31,9 @@ export async function PUT(
     where: { id },
     data: {
       title,
+      titleEn: sanitizeString(body.titleEn, 500) || "",
       content: sanitizeString(body.content, 50000) || "",
+      contentEn: sanitizeString(body.contentEn, 50000) || "",
       category: body.category === "notice" ? "notice" : "news",
       published: sanitizeBool(body.published, true),
       pinned: sanitizeBool(body.pinned, false),

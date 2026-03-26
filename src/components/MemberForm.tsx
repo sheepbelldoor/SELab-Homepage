@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface MemberFormProps {
   member?: Record<string, unknown>;
@@ -252,6 +253,27 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
   const [education, setEducation] = useState<string[]>(initialEducation);
   const [awards, setAwards] = useState<string[]>(initialAwards);
 
+  const initialEducationEn: string[] = (() => {
+    try {
+      const raw = member?.educationEn;
+      if (typeof raw === "string") return JSON.parse(raw);
+      if (Array.isArray(raw)) return raw;
+    } catch { /* ignore */ }
+    return [];
+  })();
+
+  const initialAwardsEn: string[] = (() => {
+    try {
+      const raw = member?.awardsEn;
+      if (typeof raw === "string") return JSON.parse(raw);
+      if (Array.isArray(raw)) return raw;
+    } catch { /* ignore */ }
+    return [];
+  })();
+
+  const [educationEn, setEducationEn] = useState<string[]>(initialEducationEn);
+  const [awardsEn, setAwardsEn] = useState<string[]>(initialAwardsEn);
+
   function addAlias() {
     const trimmed = newAlias.trim();
     if (trimmed && !aliases.includes(trimmed)) {
@@ -280,7 +302,9 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
         nameEn: form.get("nameEn") || null,
         role: form.get("role"),
         bio: form.get("bio") || null,
+        bioEn: form.get("bioEn") || null,
         interest: form.get("interest") || null,
+        interestEn: form.get("interestEn") || null,
         email: form.get("email") || null,
         homepage: form.get("homepage") || null,
         github: form.get("github") || null,
@@ -289,7 +313,9 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
         photo,
         authorAliases: aliases,
         education,
+        educationEn,
         awards,
+        awardsEn,
         sortOrder: Number(form.get("sortOrder")) || 0,
       }),
     });
@@ -334,16 +360,6 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
               <Label htmlFor="sortOrder">정렬 순서</Label>
               <Input id="sortOrder" name="sortOrder" type="number" defaultValue={(member?.sortOrder as number) || 0} />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="bio">소개 (Bio)</Label>
-            <Textarea id="bio" name="bio" rows={3} defaultValue={(member?.bio as string) || ""} placeholder="간단한 자기소개나 경력 등" />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="interest">관심 연구 분야</Label>
-            <Input id="interest" name="interest" defaultValue={(member?.interest as string) || ""} />
           </div>
 
           <div className="space-y-2">
@@ -393,31 +409,64 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
             )}
           </div>
 
-          {/* Education */}
-          <div className="space-y-2">
-            <Label>Education</Label>
-            <p className="text-xs text-muted-foreground">
-              학력 사항을 추가하세요. 드래그하거나 ▲▼ 버튼으로 순서를 변경할 수 있습니다.
-            </p>
-            <ReorderableList
-              items={education}
-              onChange={setEducation}
-              placeholder="예: M.S. in Computer Science, Hanyang University, 2025"
-            />
-          </div>
-
-          {/* Honors & Awards */}
-          <div className="space-y-2">
-            <Label>Honors & Awards</Label>
-            <p className="text-xs text-muted-foreground">
-              수상 및 명예 사항을 추가하세요. 드래그하거나 ▲▼ 버튼으로 순서를 변경할 수 있습니다.
-            </p>
-            <ReorderableList
-              items={awards}
-              onChange={setAwards}
-              placeholder="예: Best Paper Award, ICSE 2024"
-            />
-          </div>
+          <Tabs defaultValue="ko">
+            <TabsList>
+              <TabsTrigger value="ko">한국어</TabsTrigger>
+              <TabsTrigger value="en">English</TabsTrigger>
+            </TabsList>
+            <TabsContent value="ko" className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="bio">소개 (Bio)</Label>
+                <Textarea id="bio" name="bio" rows={3} defaultValue={(member?.bio as string) || ""} placeholder="간단한 자기소개나 경력 등" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="interest">관심 연구 분야</Label>
+                <Input id="interest" name="interest" defaultValue={(member?.interest as string) || ""} />
+              </div>
+              <div className="space-y-2">
+                <Label>Education (한국어)</Label>
+                <ReorderableList
+                  items={education}
+                  onChange={setEducation}
+                  placeholder="예: 한양대학교 컴퓨터소프트웨어학부 석사, 2025"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Honors & Awards (한국어)</Label>
+                <ReorderableList
+                  items={awards}
+                  onChange={setAwards}
+                  placeholder="예: Best Paper Award, ICSE 2024"
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="en" className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="bioEn">Bio (English)</Label>
+                <Textarea id="bioEn" name="bioEn" rows={3} defaultValue={(member?.bioEn as string) || ""} placeholder="Brief introduction or career summary" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="interestEn">Research Interests (English)</Label>
+                <Input id="interestEn" name="interestEn" defaultValue={(member?.interestEn as string) || ""} />
+              </div>
+              <div className="space-y-2">
+                <Label>Education (English)</Label>
+                <ReorderableList
+                  items={educationEn}
+                  onChange={setEducationEn}
+                  placeholder="e.g. M.S. in Computer Science, Hanyang University, 2025"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Honors & Awards (English)</Label>
+                <ReorderableList
+                  items={awardsEn}
+                  onChange={setAwardsEn}
+                  placeholder="e.g. Best Paper Award, ICSE 2024"
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
