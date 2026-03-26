@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
@@ -16,7 +16,30 @@ interface Props {
 export default function PublicationForm({ publication, isEdit }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [featured, setFeatured] = useState((publication?.featured as boolean) || false);
+
+  const initialTags: string[] = (() => {
+    try {
+      const raw = publication?.tags;
+      if (typeof raw === "string") return JSON.parse(raw);
+      if (Array.isArray(raw)) return raw;
+    } catch { /* ignore */ }
+    return [];
+  })();
+
+  const [tags, setTags] = useState<string[]>(initialTags);
+  const [newTag, setNewTag] = useState("");
+
+  function addTag() {
+    const trimmed = newTag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+    }
+    setNewTag("");
+  }
+
+  function removeTag(index: number) {
+    setTags(tags.filter((_, i) => i !== index));
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,7 +57,7 @@ export default function PublicationForm({ publication, isEdit }: Props) {
         authors: form.get("authors"),
         venue: form.get("venue"),
         year: Number(form.get("year")),
-        featured,
+        tags,
         url: form.get("url") || null,
         pdfUrl: form.get("pdfUrl") || null,
         doiUrl: form.get("doiUrl") || null,
@@ -73,6 +96,47 @@ export default function PublicationForm({ publication, isEdit }: Props) {
               <Input id="year" name="year" type="number" defaultValue={(publication?.year as number) || new Date().getFullYear()} required />
             </div>
           </div>
+
+          {/* Tags */}
+          <div className="space-y-2">
+            <Label>태그</Label>
+            <p className="text-xs text-muted-foreground">
+              학회, 수상 등 태그를 추가하세요. (예: ICSE, ASE, Best Paper Award)
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="예: ICSE"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addTag();
+                  }
+                }}
+              />
+              <Button type="button" variant="outline" onClick={addTag}>
+                추가
+              </Button>
+            </div>
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {tags.map((tag, i) => (
+                  <Badge key={i} variant="secondary" className="text-sm py-1 px-3 gap-1.5">
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(i)}
+                      className="ml-1 text-muted-foreground hover:text-foreground"
+                    >
+                      &times;
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="url">논문 URL (제목 클릭 시 이동)</Label>
             <Input id="url" name="url" placeholder="https://..." defaultValue={(publication?.url as string) || ""} />
@@ -96,10 +160,6 @@ export default function PublicationForm({ publication, isEdit }: Props) {
               <Label htmlFor="videoUrl">Video URL</Label>
               <Input id="videoUrl" name="videoUrl" defaultValue={(publication?.videoUrl as string) || ""} />
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Switch id="featured" checked={featured} onCheckedChange={setFeatured} />
-            <Label htmlFor="featured">대표 논문</Label>
           </div>
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={saving}>

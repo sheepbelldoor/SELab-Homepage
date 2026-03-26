@@ -1,8 +1,6 @@
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 import { sanitizeMapUrl } from "@/lib/validate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -12,13 +10,15 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PageHeader title="Contact" subtitle="연락처 및 지원 안내" />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <PageHeader title="Contact" subtitle="연락처 및 지원 안내" overline="Get in Touch" />
+      <div className="max-w-4xl mx-auto px-8 pb-16">
         {/* Join Us */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-2">Join Us</h2>
-          <Separator className="mb-6" />
-          <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
+          <div className="flex items-center gap-4 mb-8">
+            <h2 className="font-headline text-2xl font-extrabold text-primary">Join Us</h2>
+            <div className="h-px flex-grow bg-outline-variant opacity-30" />
+          </div>
+          <div className="font-body-text whitespace-pre-wrap text-on-surface-variant leading-relaxed text-lg">
             {config?.joinUsContent ||
               "모집 관련 내용이 아직 등록되지 않았습니다."}
           </div>
@@ -26,63 +26,67 @@ export default async function ContactPage() {
 
         {/* Contact Info */}
         <section>
-          <h2 className="text-2xl font-bold mb-2">Contact Info</h2>
-          <Separator className="mb-6" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">주소</CardTitle>
-                </CardHeader>
-                <CardContent className="text-muted-foreground space-y-1">
+          <div className="flex items-center gap-4 mb-8">
+            <h2 className="font-headline text-2xl font-extrabold text-primary">Contact Info</h2>
+            <div className="h-px flex-grow bg-outline-variant opacity-30" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-8">
+              {/* Address */}
+              <div className="bg-surface-container-low rounded-[6px] p-8">
+                <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-primary mb-4">
+                  <span className="material-symbols-outlined text-lg align-middle mr-2">location_on</span>
+                  주소
+                </h3>
+                <div className="font-body-text text-on-surface-variant space-y-1">
                   {config?.address && <p>{config.address}</p>}
                   {config?.building && <p>{config.building}</p>}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">연락처</CardTitle>
-                </CardHeader>
-                <CardContent className="text-muted-foreground space-y-1">
+              {/* Contact Details */}
+              <div className="bg-surface-container-low rounded-[6px] p-8">
+                <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-primary mb-4">
+                  <span className="material-symbols-outlined text-lg align-middle mr-2">mail</span>
+                  연락처
+                </h3>
+                <div className="font-body-text text-on-surface-variant space-y-2">
                   {config?.email && (
                     <p>
-                      <span className="font-medium text-foreground">Email:</span> {config.email}
+                      <span className="font-headline font-semibold text-on-surface text-sm">Email:</span>{" "}
+                      {config.email}
                     </p>
                   )}
                   {config?.phone && (
                     <p>
-                      <span className="font-medium text-foreground">Tel:</span> {config.phone}
+                      <span className="font-headline font-semibold text-on-surface text-sm">Tel:</span>{" "}
+                      {config.phone}
                     </p>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
 
-            <Card className="flex items-center justify-center min-h-[300px]">
-              <CardContent className="w-full p-6">
-                {safeMapUrl ? (
-                  <iframe
-                    src={safeMapUrl}
-                    width="100%"
-                    height="300"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="rounded-lg"
-                  />
-                ) : (
-                  <div className="text-center text-muted-foreground">
-                    <svg className="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <p>지도가 등록되지 않았습니다.</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Map */}
+            <div className="bg-surface-container-low rounded-[6px] overflow-hidden min-h-[300px] flex items-center justify-center">
+              {safeMapUrl ? (
+                <iframe
+                  src={safeMapUrl}
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full"
+                />
+              ) : (
+                <div className="text-center text-outline p-8">
+                  <span className="material-symbols-outlined text-5xl mb-3 block">map</span>
+                  <p className="font-headline text-sm">지도가 등록되지 않았습니다.</p>
+                </div>
+              )}
+            </div>
           </div>
         </section>
       </div>

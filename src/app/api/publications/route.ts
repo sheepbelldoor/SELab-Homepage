@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-check";
-import { sanitizeString, sanitizeInt, sanitizeBool, sanitizeUrl } from "@/lib/validate";
+import { sanitizeString, sanitizeInt, sanitizeUrl } from "@/lib/validate";
 
 export async function GET() {
   const pubs = await prisma.publication.findMany({
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       authors: sanitizeString(body.authors, 2000) || "",
       venue: sanitizeString(body.venue, 500) || "",
       year: sanitizeInt(body.year, new Date().getFullYear()),
-      featured: sanitizeBool(body.featured, false),
+      tags: JSON.stringify(Array.isArray(body.tags) ? body.tags.map((t: unknown) => String(t).slice(0, 100)) : []),
       url: sanitizeUrl(body.url),
       pdfUrl: sanitizeUrl(body.pdfUrl),
       doiUrl: sanitizeUrl(body.doiUrl),

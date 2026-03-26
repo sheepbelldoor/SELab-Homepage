@@ -54,7 +54,7 @@ model Publication {
   authors     String
   venue       String
   year        Int
-  featured    Boolean  @default(false)
+  tags        String   @default("[]") // JSON array of tags (e.g. ["ICSE", "Best Paper"])
   url         String?
   pdfUrl      String?
   doiUrl      String?

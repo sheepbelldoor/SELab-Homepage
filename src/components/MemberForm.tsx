@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,203 @@ interface MemberFormProps {
   isEdit?: boolean;
 }
 
+/* ───────── Reorderable list with drag & drop + edit ───────── */
+function ReorderableList({
+  items,
+  onChange,
+  placeholder,
+  addLabel = "추가",
+}: {
+  items: string[];
+  onChange: (items: string[]) => void;
+  placeholder: string;
+  addLabel?: string;
+}) {
+  const [newItem, setNewItem] = useState("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+
+  function addItem() {
+    const trimmed = newItem.trim();
+    if (trimmed && !items.includes(trimmed)) {
+      onChange([...items, trimmed]);
+    }
+    setNewItem("");
+  }
+
+  function removeItem(index: number) {
+    onChange(items.filter((_, i) => i !== index));
+    if (editIndex === index) setEditIndex(null);
+  }
+
+  function startEdit(index: number) {
+    setEditIndex(index);
+    setEditValue(items[index]);
+  }
+
+  function saveEdit() {
+    if (editIndex === null) return;
+    const trimmed = editValue.trim();
+    if (trimmed) {
+      const next = [...items];
+      next[editIndex] = trimmed;
+      onChange(next);
+    }
+    setEditIndex(null);
+    setEditValue("");
+  }
+
+  function cancelEdit() {
+    setEditIndex(null);
+    setEditValue("");
+  }
+
+  function moveUp(index: number) {
+    if (index <= 0) return;
+    const next = [...items];
+    [next[index - 1], next[index]] = [next[index], next[index - 1]];
+    onChange(next);
+  }
+
+  function moveDown(index: number) {
+    if (index >= items.length - 1) return;
+    const next = [...items];
+    [next[index], next[index + 1]] = [next[index + 1], next[index]];
+    onChange(next);
+  }
+
+  const handleDragStart = useCallback((index: number) => {
+    dragItem.current = index;
+  }, []);
+
+  const handleDragEnter = useCallback((index: number) => {
+    dragOverItem.current = index;
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (dragItem.current === null || dragOverItem.current === null) return;
+    if (dragItem.current === dragOverItem.current) {
+      dragItem.current = null;
+      dragOverItem.current = null;
+      return;
+    }
+    const next = [...items];
+    const dragged = next.splice(dragItem.current, 1)[0];
+    next.splice(dragOverItem.current, 0, dragged);
+    onChange(next);
+    dragItem.current = null;
+    dragOverItem.current = null;
+  }, [items, onChange]);
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-2">
+        <Input
+          value={newItem}
+          onChange={(e) => setNewItem(e.target.value)}
+          placeholder={placeholder}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addItem();
+            }
+          }}
+        />
+        <Button type="button" variant="outline" onClick={addItem}>
+          {addLabel}
+        </Button>
+      </div>
+      {items.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          {items.map((item, i) => (
+            <div
+              key={`${i}-${item}`}
+              draggable
+              onDragStart={() => handleDragStart(i)}
+              onDragEnter={() => handleDragEnter(i)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => e.preventDefault()}
+              className="flex items-center gap-2 group bg-muted/50 rounded-md px-2 py-1.5 cursor-grab active:cursor-grabbing"
+            >
+              {/* Drag handle */}
+              <span className="text-muted-foreground text-xs select-none" title="드래그하여 순서 변경">
+                ⠿
+              </span>
+
+              {editIndex === i ? (
+                // Edit mode
+                <div className="flex-1 flex gap-1.5">
+                  <Input
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    className="h-7 text-sm"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") { e.preventDefault(); saveEdit(); }
+                      if (e.key === "Escape") cancelEdit();
+                    }}
+                  />
+                  <Button type="button" variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={saveEdit}>
+                    확인
+                  </Button>
+                  <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={cancelEdit}>
+                    취소
+                  </Button>
+                </div>
+              ) : (
+                // Display mode
+                <>
+                  <span className="flex-1 text-sm truncate">{item}</span>
+                  {/* Move buttons */}
+                  <button
+                    type="button"
+                    onClick={() => moveUp(i)}
+                    disabled={i === 0}
+                    className="text-muted-foreground hover:text-foreground disabled:opacity-30 text-xs"
+                    title="위로 이동"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveDown(i)}
+                    disabled={i === items.length - 1}
+                    className="text-muted-foreground hover:text-foreground disabled:opacity-30 text-xs"
+                    title="아래로 이동"
+                  >
+                    ▼
+                  </button>
+                  {/* Edit */}
+                  <button
+                    type="button"
+                    onClick={() => startEdit(i)}
+                    className="text-muted-foreground hover:text-foreground text-xs"
+                    title="수정"
+                  >
+                    ✎
+                  </button>
+                  {/* Delete */}
+                  <button
+                    type="button"
+                    onClick={() => removeItem(i)}
+                    className="text-muted-foreground hover:text-destructive text-xs"
+                    title="삭제"
+                  >
+                    ✕
+                  </button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ───────── Main Form ───────── */
 export default function MemberForm({ member, isEdit }: MemberFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -22,7 +219,6 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
     (member?.photo as string) || null
   );
 
-  // Parse authorAliases from member data
   const initialAliases: string[] = (() => {
     try {
       const raw = member?.authorAliases;
@@ -35,7 +231,6 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
   const [aliases, setAliases] = useState<string[]>(initialAliases);
   const [newAlias, setNewAlias] = useState("");
 
-  // Parse education from member data
   const initialEducation: string[] = (() => {
     try {
       const raw = member?.education;
@@ -45,7 +240,6 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
     return [];
   })();
 
-  // Parse awards from member data
   const initialAwards: string[] = (() => {
     try {
       const raw = member?.awards;
@@ -56,9 +250,7 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
   })();
 
   const [education, setEducation] = useState<string[]>(initialEducation);
-  const [newEducation, setNewEducation] = useState("");
   const [awards, setAwards] = useState<string[]>(initialAwards);
-  const [newAward, setNewAward] = useState("");
 
   function addAlias() {
     const trimmed = newAlias.trim();
@@ -161,7 +353,7 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
 
           <ImageUpload value={photo} onChange={setPhoto} label="프로필 사진" />
 
-          {/* Author Aliases for Publication Matching */}
+          {/* Author Aliases */}
           <div className="space-y-2">
             <Label>논문 저자명 (Publication Author Names)</Label>
             <p className="text-xs text-muted-foreground">
@@ -205,100 +397,26 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
           <div className="space-y-2">
             <Label>Education</Label>
             <p className="text-xs text-muted-foreground">
-              학력 사항을 추가하세요. (예: &quot;Ph.D. in Computer Science, MIT, 2020&quot;)
+              학력 사항을 추가하세요. 드래그하거나 ▲▼ 버튼으로 순서를 변경할 수 있습니다.
             </p>
-            <div className="flex gap-2">
-              <Input
-                value={newEducation}
-                onChange={(e) => setNewEducation(e.target.value)}
-                placeholder="예: M.S. in Computer Science, Hanyang University, 2025"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const trimmed = newEducation.trim();
-                    if (trimmed && !education.includes(trimmed)) {
-                      setEducation([...education, trimmed]);
-                    }
-                    setNewEducation("");
-                  }
-                }}
-              />
-              <Button type="button" variant="outline" onClick={() => {
-                const trimmed = newEducation.trim();
-                if (trimmed && !education.includes(trimmed)) {
-                  setEducation([...education, trimmed]);
-                }
-                setNewEducation("");
-              }}>
-                추가
-              </Button>
-            </div>
-            {education.length > 0 && (
-              <div className="flex flex-col gap-1.5 mt-2">
-                {education.map((item, i) => (
-                  <Badge key={i} variant="secondary" className="text-sm py-1 px-3 gap-1.5 w-fit">
-                    {item}
-                    <button
-                      type="button"
-                      onClick={() => setEducation(education.filter((_, idx) => idx !== i))}
-                      className="ml-1 text-muted-foreground hover:text-foreground"
-                    >
-                      &times;
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            )}
+            <ReorderableList
+              items={education}
+              onChange={setEducation}
+              placeholder="예: M.S. in Computer Science, Hanyang University, 2025"
+            />
           </div>
 
           {/* Honors & Awards */}
           <div className="space-y-2">
             <Label>Honors & Awards</Label>
             <p className="text-xs text-muted-foreground">
-              수상 및 명예 사항을 추가하세요.
+              수상 및 명예 사항을 추가하세요. 드래그하거나 ▲▼ 버튼으로 순서를 변경할 수 있습니다.
             </p>
-            <div className="flex gap-2">
-              <Input
-                value={newAward}
-                onChange={(e) => setNewAward(e.target.value)}
-                placeholder="예: Best Paper Award, ICSE 2024"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const trimmed = newAward.trim();
-                    if (trimmed && !awards.includes(trimmed)) {
-                      setAwards([...awards, trimmed]);
-                    }
-                    setNewAward("");
-                  }
-                }}
-              />
-              <Button type="button" variant="outline" onClick={() => {
-                const trimmed = newAward.trim();
-                if (trimmed && !awards.includes(trimmed)) {
-                  setAwards([...awards, trimmed]);
-                }
-                setNewAward("");
-              }}>
-                추가
-              </Button>
-            </div>
-            {awards.length > 0 && (
-              <div className="flex flex-col gap-1.5 mt-2">
-                {awards.map((item, i) => (
-                  <Badge key={i} variant="secondary" className="text-sm py-1 px-3 gap-1.5 w-fit">
-                    {item}
-                    <button
-                      type="button"
-                      onClick={() => setAwards(awards.filter((_, idx) => idx !== i))}
-                      className="ml-1 text-muted-foreground hover:text-foreground"
-                    >
-                      &times;
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            )}
+            <ReorderableList
+              items={awards}
+              onChange={setAwards}
+              placeholder="예: Best Paper Award, ICSE 2024"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

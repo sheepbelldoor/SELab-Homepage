@@ -32,16 +32,19 @@ export default function YearNav({ years }: { years: number[] }) {
   }
 
   return (
-    <nav className="hidden lg:block sticky top-24 self-start">
-      <ul className="space-y-1 border-l-2 border-border pl-3">
+    <div className="sticky top-32">
+      <h3 className="font-headline text-xs font-bold uppercase tracking-widest text-outline mb-6">
+        Chronology
+      </h3>
+      <ul className="space-y-4">
         {years.map((year) => (
           <li key={year}>
             <button
               onClick={() => scrollToYear(year)}
-              className={`block text-sm py-0.5 px-2 rounded transition-colors ${
+              className={`font-headline text-lg transition-colors ${
                 activeYear === year
-                  ? "text-primary font-semibold bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-primary font-bold"
+                  : "font-semibold text-outline hover:text-primary"
               }`}
             >
               {year}
@@ -49,6 +52,6 @@ export default function YearNav({ years }: { years: number[] }) {
           </li>
         ))}
       </ul>
-    </nav>
+    </div>
   );
 }
