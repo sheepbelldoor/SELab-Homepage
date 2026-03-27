@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
         source: "/uploads/:path*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Content-Security-Policy", value: "default-src 'none'; style-src 'unsafe-inline'" },
+          { key: "Content-Security-Policy", value: "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'" },
         ],
       },
     ];
