@@ -67,7 +67,7 @@ export default function NewPostPage() {
                 <TabsTrigger value="ko">한국어</TabsTrigger>
                 <TabsTrigger value="en">English</TabsTrigger>
               </TabsList>
-              <TabsContent value="ko" className="space-y-4 mt-4">
+              <TabsContent value="ko" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
                 <div className="space-y-2">
                   <Label htmlFor="title">제목</Label>
                   <Input id="title" name="title" required />
@@ -77,7 +77,7 @@ export default function NewPostPage() {
                   <Textarea id="content" name="content" rows={15} required />
                 </div>
               </TabsContent>
-              <TabsContent value="en" className="space-y-4 mt-4">
+              <TabsContent value="en" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
                 <div className="space-y-2">
                   <Label htmlFor="titleEn">Title</Label>
                   <Input id="titleEn" name="titleEn" />

@@ -414,7 +414,7 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
               <TabsTrigger value="ko">한국어</TabsTrigger>
               <TabsTrigger value="en">English</TabsTrigger>
             </TabsList>
-            <TabsContent value="ko" className="space-y-4 mt-4">
+            <TabsContent value="ko" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
               <div className="space-y-2">
                 <Label htmlFor="bio">소개 (Bio)</Label>
                 <Textarea id="bio" name="bio" rows={3} defaultValue={(member?.bio as string) || ""} placeholder="간단한 자기소개나 경력 등" />
@@ -440,7 +440,7 @@ export default function MemberForm({ member, isEdit }: MemberFormProps) {
                 />
               </div>
             </TabsContent>
-            <TabsContent value="en" className="space-y-4 mt-4">
+            <TabsContent value="en" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
               <div className="space-y-2">
                 <Label htmlFor="bioEn">Bio (English)</Label>
                 <Textarea id="bioEn" name="bioEn" rows={3} defaultValue={(member?.bioEn as string) || ""} placeholder="Brief introduction or career summary" />

@@ -104,7 +104,7 @@ export default function AdminSettingsPage() {
                 <TabsTrigger value="ko">한국어</TabsTrigger>
                 <TabsTrigger value="en">English</TabsTrigger>
               </TabsList>
-              <TabsContent value="ko" className="space-y-4 mt-4">
+              <TabsContent value="ko" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="labName">연구실 이름</Label>
@@ -135,7 +135,7 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="en" className="space-y-4 mt-4">
+              <TabsContent value="en" keepMounted className="space-y-4 mt-4 data-[hidden]:hidden">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="labNameEn">Lab Name</Label>
